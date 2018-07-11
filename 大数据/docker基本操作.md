@@ -94,6 +94,22 @@ d) 删除本地镜像
 docker rmi centos:latest
 ```
 
+或
+
+```shell
+docker image rm centos:latest
+```
+
+
+
+e) commit创建镜像
+
+```
+docker commit -a 'yizt' -m 'conda install' 645e3a3831e4 centos:conda
+```
+
+​          ` -a` 是指定修改的作者，而 `-m` 则是记录本次修改的内容；提交后`docker image ls` 可以看到刚才提交的 centos:conda镜像
+
 
 
 ## 容器操作
@@ -130,113 +146,61 @@ docker container start 15021ef90316
 
 
 
-d) 
+d) 终止运行的容器
 
-
-
-
-
-
-
-
-
-## 参考资料
-
-[Docker-从入门到实战](https://yeasy.gitbooks.io/docker_practice/content/basic_concept/image.html)
-
-
-
-
-
-
-
-
-
-```
-docker run -t -i centos /bin/bash
+```shell
+docker container stop 15021ef90316
 ```
 
-运行
-
-docker run -it --name verifycode centos /bin/bash
 
 
+e) 进入容器
 
-docker run -it --name verifycode --network host centos:v1 /bin/bash
-
-
-
-删除container
-
-​	docker rm 0a07b3bcf249
-
-删除image
-
-docker rmi centos:v1
+```shell
+docker exec -it 15021ef90316 /bin/bash
+```
 
 
 
+f) 容器删除
 
+```shell
+docker rm 411be4f25cb8
+```
 
-制作image
+或
 
-docker commit -a 'yizt' -m 'test' fb09f8e9973c centos:v1
+```shell
+docker container rm 411be4f25cb8
+```
 
-
-
-docker commit -a 'yizt' -m 'conda install' 645e3a3831e4 centos:conda
-
-
-
-docker commit -a 'yizt' -m 'caffe install' 645e3a3831e4 centos:caffe
-
-
-
-docker commit -a 'yizt' -m 'init' 645e3a3831e4 centos:init
+​         如果要删除一个运行中的容器，可以添加 `-f` 参数。Docker 会发送 `SIGKILL` 信号给容器。
 
 
 
-docker commit -a 'yizt' -m 'init' cee4118557c8 centos:12306
+## 导入导出
+
+a) 镜像导出
+
+```shell
+docker save -o docker.tar centos:v1
+```
+
+导出加压缩
+
+```shell
+docker save centos:v1 | gzip > docker.tgz
+```
 
 
 
-进入容器
+b) 镜像导入
 
-docker attach 645e3a3831e4
+```shell
+docker load -i docker.tar
+```
 
-
-
-导出
-
-docker save -o soft/test.tar centos:v1
-
-
-
-docker save -o docker.tar centos:12306
-
-docker save centos:12306 | gzip > docker.tgz
-
-
-
-gzip docker.tar
-
-分割、合并
-
-split -b 500m test.tar.gz test.tar.gz.
-
-cat test.tar.gz.aa test.tar.gz.ab test.tar.gz.ac test.tar.gz.ad test.tar.gz.ae test.tar.gz.af test.tar.gz.ag > test.tar.gz
-
-
-
-
-
-split -b 500m docker.tar.gz docker.tar.gz.
-
-导入
-
-docker load --input soft/test.tar
-
-
+或
 
 ```shell
 docker load < docker.tgz
@@ -244,116 +208,50 @@ docker load < docker.tgz
 
 
 
-复制文件
+c) 容器导出
 
-docker cp caffe verifycode:/opt/github/caffe
+```shell
+docker export 15021ef90316 > centos.tar
+```
 
 
 
-## 安装软件
+d) 容器导入
 
-yum install -y wget
+```
+docker import centos.tar centos:v1
+```
 
-yum install -y bzip2
 
-yum install -y net-tools
 
-yum -y install gcc automake autoconf libtool make
+### docker save和docker export的区别
 
-yum -y install gcc+ gcc-c++
+docker save和docker export的区别：
 
-wget --user=root --password=123456 ftp://192.168.1.165/ambari/soft/Anaconda3-5.1.0-Linux-x86_64.sh
+1. docker save保存的是镜像（image），docker export保存的是容器（container）；
+2. docker load用来载入镜像包，docker import用来载入容器包，但两者都会恢复为镜像；
+3. docker load不能对载入的镜像重命名，而docker import可以为镜像指定新名称。
 
 
 
-conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-conda config --set show_channel_urls yes
+## 容器与主机通信
 
+a) 文件复制
 
+​     i)从容器中复制文件或目录到执行命令所在机器的指定路径
+docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH
 
-### caffe虚拟环境
+​     ii)从执行命令所在的机器复制文件或目录到容器内部的指定路径
+docker cp [OPTIONS] SRC_PATH CONTAINER:DEST_PATH ;
 
-conda create -n caffe python=2.7
+```shell
+docker cp /www/runoob 96f7f14e99ab:/www/
+```
 
-source activate caffe
+​        将主机/www/runoob目录拷贝到容器96f7f14e99ab的/www目录下。
 
 
 
-conda install tornado
+## 参考资料
 
-conda install configparser
-
-conda install flask
-
-
-
-### tensorflow虚拟环境
-
-conda remove -n tf --all
-
-conda create -n tf python=3.6
-
-source activate tf
-
-conda install tensorflow=1.4.1
-
-conda install tornado
-
-conda install configparser
-
-conda install flask
-
-conda install pillow
-
-
-
-
-
-基础环境
-
-conda install jupyter
-
-jupyter-notebook password 
-
-设置为123456
-
-jupyter notebook --no-browser --port=9000 --ip=192.168.1.219 --allow-root
-
-
-
-### 复制代码和模型
-
-docker cp /opt/code verifycode:/opt/code
-
-docker cp /opt/models verifycode:/opt/models
-
-
-
-
-
-
-
-caffe启动
-
-python /opt/code/verify_code/caffe_head_predict_rest.py
-
-
-
-
-
-tf启动
-
-python /opt/code/verify_code/verify_code_tf_api/tf_predict_rest.py
-
-
-
-
-
-
-
-
-
-## 问题记录
-
-echo 'export LANG=en_US.UTF-8' >> ~/.bashrc
+[Docker-从入门到实战](https://yeasy.gitbooks.io/docker_practice/content/basic_concept/image.html)
