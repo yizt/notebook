@@ -32,5 +32,19 @@ conda config --set show_channel_urls yes
 
 
 
+## 基础编程
+
 ### xml读写
+
+
+
+### 图像文件IO
+
+```
+skimage.io
+plt
+opencv
+pillow
+keras.preprocessing.image
+```
 
