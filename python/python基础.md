@@ -2,7 +2,7 @@
 
 
 
-# python环境配置
+## python环境配置
 
 
 
@@ -48,3 +48,18 @@ pillow
 keras.preprocessing.image
 ```
 
+
+
+
+
+## 综合
+
+### 参数传递
+
+形参*args, **kwargs
+
+### 导入
+
+相对路径导入
+
+绝对路径导入
