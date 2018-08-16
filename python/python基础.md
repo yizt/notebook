@@ -34,6 +34,10 @@ conda config --set show_channel_urls yes
 
 ## 基础编程
 
+
+
+### 压缩文件读写
+
 ### xml读写
 
 
@@ -63,3 +67,9 @@ keras.preprocessing.image
 相对路径导入
 
 绝对路径导入
+
+
+
+### py2to3
+
+30/4

@@ -1,5 +1,7 @@
 
 
+工程地址：https://github.com/k3nt0w/FCN_via_keras
+
 
 
 
@@ -16,3 +18,6 @@ InternalError: Dst tensor is not initialized.
 	 [[Node: metrics/acc/Mean/_123 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_798_metrics/acc/Mean", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
 ```
 
+
+
+2: 
