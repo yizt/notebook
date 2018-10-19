@@ -530,3 +530,30 @@ model.fit(X_train, Y_train, batch_size=128, epochs=20, verbose=0, validation_dat
 
 参考：[Keras中文手册](http://keras-cn.readthedocs.io/en/latest/)
 
+
+
+## 图片预处理
+
+```python
+def gen_data(image_infos, batch_size=1):
+    """
+    生成器
+    :param image_infos:
+    :param batch_size:
+    :return:
+    """
+    length = len(image_infos)
+    while True:
+        batch_image_infos = [image_infos[i] for i in np.random.randint(0, length, size=batch_size)]
+        x, y = mask_img(batch_image_infos)
+        yield x, y
+ 
+m.fit_generator(generator=gen_data(train_img_infos, batch_size),
+                    epochs=epochs,
+                    steps_per_epoch=steps_per_epoch,
+                    verbose=1,
+                    validation_data=(x_test, y_test),
+                    callbacks=get_call_back(backbone_model),
+                    initial_epoch=initial_epoch)
+```
+

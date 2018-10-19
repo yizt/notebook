@@ -380,3 +380,16 @@ Exception in thread "main" java.lang.IllegalArgumentException: Fields org.dmg.pm
       setLabelCol("classIndex").setProbabilityCol("pp")   //改一个名字不能用probability
 ```
 
+
+
+
+
+15: 为了解决buff/cache占用过多的问题执行以下命令即可
+
+```
+sync
+echo 1 > /proc/sys/vm/drop_caches
+echo 2 > /proc/sys/vm/drop_caches
+echo 3 > /proc/sys/vm/drop_caches
+```
+

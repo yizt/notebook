@@ -252,6 +252,43 @@ docker cp /www/runoob 96f7f14e99ab:/www/
 
 
 
+## Dockerfile定制镜像
+
+在Dockerfile目录下执行docker build . 即可; -t指定镜像名称
+
+```
+docker build -t caffe2:v1 .
+```
+
+
+
+
+
+## Nvidia-docker安装
+
+​             可以在docker容器中执行gpu；参照：<https://github.com/NVIDIA/nvidia-docker> 执行如下命令即可
+
+```
+docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
+sudo yum remove nvidia-docker
+
+# Add the package repositories
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | \
+  sudo tee /etc/yum.repos.d/nvidia-docker.repo
+
+# Install nvidia-docker2 and reload the Docker daemon configuration
+sudo yum install -y nvidia-docker2
+sudo pkill -SIGHUP dockerd
+
+# Test nvidia-smi with the latest official CUDA image
+docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
+```
+
+
+
+
+
 ## 参考资料
 
 [Docker-从入门到实战](https://yeasy.gitbooks.io/docker_practice/content/basic_concept/image.html)
