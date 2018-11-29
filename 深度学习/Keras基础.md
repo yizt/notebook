@@ -63,6 +63,37 @@ def get_model(input_shape):
 
 ## 层
 
+### 自定义层
+
+要定制自己的层，你需要实现下面三个方法
+
+- `build(input_shape)`：这是定义权重的方法，可训练的权应该在这里被加入列表``self.trainable_weights`中。其他的属性还包括`self.non_trainabe_weights`（列表）和`self.updates`（需要更新的形如（tensor, new_tensor）的tuple的列表）。你可以参考`BatchNormalization`层的实现来学习如何使用上面两个属性。这个方法必须设置`self.built = True`，可通过调用`super([layer],self).build()`实现
+- `call(x)`：这是定义层功能的方法，除非你希望你写的层支持masking，否则你只需要关心`call`的第一个参数：输入张量
+- `get_output_shape_for(input_shape)`：如果你的层修改了输入数据的shape，你应该在这里指定shape变化的方法，这个函数使得Keras可以做自动shape推断
+
+```python
+from keras import backend as K
+from keras.engine.topology import Layer
+
+class MyLayer(Layer):
+    def __init__(self, output_dim, **kwargs):
+        self.output_dim = output_dim
+        super(MyLayer, self).__init__(**kwargs)
+
+    def build(self, input_shape):
+    # 这是定义权重的方法，可训练的权应该在这里被加入列表
+        self.W = self.add_weight(shape=(input_shape[1], self.output_dim),
+                                initializer='random_uniform',
+                                trainable=True)
+        super(MyLayer, self).build()  # be sure you call this somewhere! 
+
+    def call(self, x, mask=None):
+        return K.dot(x, self.W)
+
+    def get_output_shape_for(self, input_shape):
+        return (input_shape[0] + self.output_dim)
+```
+
 
 
 
@@ -108,6 +139,66 @@ model.compile(loss=losses.mean_squared_error, optimizer='sgd')
 from keras.utils.np_utils import to_categorical
 categorical_labels = to_categorical(int_labels, num_classes=None)
 ```
+
+
+
+### add_loss定义loss层
+
+
+
+```python
+    vae_loss = K.mean(reconstruction_loss + kl_loss)
+    vae.add_loss(vae_loss)
+    vae.compile(optimizer='adam')
+```
+
+
+
+
+
+```python
+# Add Losses
+        # First, clear previously set losses to avoid duplication
+        self.keras_model._losses = []
+        self.keras_model._per_input_losses = {}
+        loss_names = [
+            "rpn_class_loss",  "rpn_bbox_loss",
+            "mrcnn_class_loss", "mrcnn_bbox_loss", "mrcnn_mask_loss"]
+        for name in loss_names:
+            layer = self.keras_model.get_layer(name)
+            if layer.output in self.keras_model.losses:
+                continue
+            loss = (
+                tf.reduce_mean(layer.output, keepdims=True)
+                * self.config.LOSS_WEIGHTS.get(name, 1.))
+            self.keras_model.add_loss(loss)
+
+        # Add L2 Regularization
+        # Skip gamma and beta weights of batch normalization layers.
+        reg_losses = [
+            keras.regularizers.l2(self.config.WEIGHT_DECAY)(w) / tf.cast(tf.size(w), tf.float32)
+            for w in self.keras_model.trainable_weights
+            if 'gamma' not in w.name and 'beta' not in w.name]
+        self.keras_model.add_loss(tf.add_n(reg_losses))
+
+        # Compile
+        self.keras_model.compile(
+            optimizer=optimizer,
+            loss=[None] * len(self.keras_model.outputs))
+
+        # Add metrics for losses
+        for name in loss_names:
+            if name in self.keras_model.metrics_names:
+                continue
+            layer = self.keras_model.get_layer(name)
+            self.keras_model.metrics_names.append(name)
+            loss = (
+                tf.reduce_mean(layer.output, keepdims=True)
+                * self.config.LOSS_WEIGHTS.get(name, 1.))
+            self.keras_model.metrics_tensors.append(loss)
+```
+
+
 
 
 

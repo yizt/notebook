@@ -18,7 +18,7 @@ http://10.221.123.45:9200/_xpack/license/trial_status
 
 bin/elasticsearch-setup-passwords interactive -u "http://10.221.123.45:9200"
 
-
+bin/elasticsearch-setup-passwords interactive -u "http://192.168.3.191:9200"
 
 elastic,kibana,logstash_system,beats_system.
 
@@ -43,6 +43,39 @@ https://www.elastic.co/guide/en/elasticsearch/reference/6.4/sql-getting-started.
 
 
 ### ES
+
+a) 系统配置修改
+
+```
+sysctl -w vm.max_map_count=262144
+
+##修改/etc/sysctl.conf文件
+vm.max_map_count=262144
+```
+
+```
+##修改 /etc/security/limits.conf 
+* soft nofile 65536
+* hard nofile 131072
+* soft nproc 4096
+* hard nproc 4096
+
+##修改/etc/security/limits.d/90-nproc.conf 
+* soft nproc 4096
+* soft nproc 4096
+```
+
+
+
+
+
+b) 修改/etc/pam.d/su（可选），增加如下
+
+```
+session 	required 	pam_limits.so
+```
+
+
 
 模板
 
@@ -241,6 +274,8 @@ bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 -
 
 ```
 bin/kafka-console-consumer.sh --bootstrap-server 10.221.123.1:6667 --topic amq --from-beginning
+
+bin/kafka-console-consumer.sh --bootstrap-server sandbox-hdp:6667 --topic ta
 ```
 
 

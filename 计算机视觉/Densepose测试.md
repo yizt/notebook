@@ -8,125 +8,11 @@
 
 
 
-### 构建caffe2镜像
-
-宿主机执行如下命令，将.pip复制到Dockerfile所在目录
-
-```shell
-cp -rp /root/.pip ./
-```
-
-
-
-在中增加Dockerfile中增加
-
-```shell
-COPY .pip /root/.pip
-```
-
-最终的Dockerfile文件如下：
-
-```dockerfile
-FROM nvidia/cuda:8.0-cudnn7-devel-ubuntu16.04
-LABEL maintainer="aaronmarkham@fb.com"
-
-# caffe2 install with gpu support
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    git \
-    libgflags-dev \
-    libgoogle-glog-dev \
-    libgtest-dev \
-    libiomp-dev \
-    libleveldb-dev \
-    liblmdb-dev \
-    libopencv-dev \
-    libopenmpi-dev \
-    libprotobuf-dev \
-    libsnappy-dev \
-    openmpi-bin \
-    openmpi-doc \
-    protobuf-compiler \
-    python-dev \
-    python-numpy \
-    python-pip \
-    python-pydot \
-    python-setuptools \
-    python-scipy \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
-COPY .pip /root/.pip
-RUN pip install --no-cache-dir --upgrade pip==9.0.3 setuptools wheel && \
-    pip install --no-cache-dir \
-    flask \
-    future \
-    graphviz \
-    hypothesis \
-    ipykernel==4.8.2 \
-    ipython==5.4.1 \
-    jupyter-console==5.0.0 \
-    jupyter==1.0.0 \
-    matplotlib==2.2.2 \
-    numpy \
-    protobuf \
-    pydot \
-    python-nvd3 \
-    pyyaml \
-    requests \
-    scikit-image \
-    scipy \
-    setuptools \
-    six \
-    tornado
-
-########## INSTALLATION STEPS ###################
-RUN git clone --branch master --recursive https://github.com/pytorch/pytorch.git
-RUN pip install typing
-RUN cd pytorch && mkdir build && cd build \
-    && cmake .. \
-    -DCUDA_ARCH_NAME=Manual \
-    -DCUDA_ARCH_BIN="35 52 60 61" \
-    -DCUDA_ARCH_PTX="61" \
-    -DUSE_NNPACK=OFF \
-    -DUSE_ROCKSDB=OFF \
-    && make -j"$(nproc)" install \
-    && ldconfig \
-    && make clean \
-    && cd .. \
-
-ENV PYTHONPATH /pytorch/build
-```
-
-
-
-
-
-最后再构建
-
-```shell
-cd /opt/github/pytorch/docker/caffe2/ubuntu-16.04-cuda8-cudnn7-all-options
-docker build -t caffe2:v1 .
-```
-
-docker build -t detectron:v1 .
-
-测试
-
-```shell
-nvidia-docker run -it caffe2:v1 /bin/bash
-python2 -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
-python2 -c 'from caffe2.python import workspace; print(workspace.NumCudaDevices())'
-```
-
- 
-
 ### Detectron安装
 
 参照：[install.md](https://github.com/facebookresearch/Detectron/blob/cbb0236dfdc17790658c146837215d2728e6fadd/INSTALL.md)
 
-coco api安装
+a) coco api安装
 
 ```shell
 COCOAPI=/opt/github/cocoapi
@@ -139,7 +25,7 @@ make install
 
 
 
-detectron安装
+b) detectron安装
 
 ```shell
 DETECTRON=/opt/github/detectron
@@ -150,7 +36,7 @@ cd $DETECTRON && make
 
 
 
-测试
+c) 测试
 
 ```
 python $DETECTRON/detectron/tests/test_spatial_narrow_as_op.py
@@ -168,6 +54,35 @@ python $DETECTRON/detectron/tests/test_zero_even_op.py
 
 
 
+### DensePose安装
+
+a) 下载
+
+```
+DENSEPOSE=/path/to/clone/densepose
+git clone https://github.com/facebookresearch/densepose $DENSEPOSE
+```
+
+b) python包安装
+
+```
+pip install -r $DENSEPOSE/requirements.txt
+```
+
+c) 配置修改
+
+
+
+d) 设置python模块
+
+```
+cd $DENSEPOSE && make
+```
+
+
+
+
+
 ### DensePose测试
 
 参考： [geting started](https://github.com/facebookresearch/DensePose/blob/master/GETTING_STARTED.md)
@@ -176,14 +91,21 @@ a)数据集下线
 
 
 
-b)预训练模型下载
+b)标注下载
 
 ```shell
-wget -t 0 -c https://s3.amazonaws.com/densepose/DensePose_ResNet101_FPN_s1x-e2e.pkl
+cd /opt/dataset/human_pose/DensePoseData/DensePose_COCO
+wget -t 0 -c https://s3.amazonaws.com/densepose/densepose_coco_2014_train.json
 wget -t 0 -c https://s3.amazonaws.com/densepose/densepose_coco_2014_valminusminival.json
 wget -t 0 -c https://s3.amazonaws.com/densepose/densepose_coco_2014_minival.json
 wget -t 0 -c https://s3.amazonaws.com/densepose/densepose_coco_2014_test.json
 ```
+
+```
+
+```
+
+
 
 
 
@@ -210,7 +132,6 @@ ln -s /coco /densepose/detectron/datasets/data/coco
 ln -s /densepose/DensePoseData/DensePose_COCO/densepose_coco_2014_minival.json /densepose/detectron/datasets/data/coco/annotations/
 ln -s /densepose/DensePoseData/DensePose_COCO/densepose_coco_2014_train.json /densepose/detectron/datasets/data/coco/annotations/
 ln -s /densepose/DensePoseData/DensePose_COCO/densepose_coco_2014_valminusminival.json /densepose/detectron/datasets/data/coco/annotations/
-
 ```
 
 
@@ -219,7 +140,6 @@ ln -s /densepose/DensePoseData/DensePose_COCO/densepose_coco_2014_valminusminiva
 
 ```
 docker commit $(docker ps --last 1 -q) densepose:datainit
-
 ```
 
 重新启动
@@ -240,7 +160,7 @@ python2 tools/infer_simple.py \
     --cfg configs/DensePose_ResNet101_FPN_s1x-e2e.yaml \
     --output-dir DensePoseDataLocal/infer_out/ \
     --image-ext jpg \
-    --wts /denseposedata/DensePose_ResNet101_FPN_s1x-e2e.pkl \
+    --wts /model/DensePose_ResNet101_FPN_s1x-e2e.pkl \
     DensePoseDataLocal/demo_data/demo_im.jpg
 ```
 
@@ -265,6 +185,7 @@ densepose:jupter
 a) 下载
 
 ```
+cd /opt/pretrained_model/detectron
 wget -c https://s3-us-west-2.amazonaws.com/detectron/ImageNetPretrained/MSRA/R-101.pkl
 ```
 
@@ -278,7 +199,7 @@ b) 修改configs/DensePose_ResNet101_FPN_s1x-e2e.yaml文件
 
 
 
-c) 
+c) 执行预测
 
 ```
 python2 tools/test_net.py \
@@ -369,24 +290,28 @@ The command '/bin/sh -c pip install --no-cache-dir --upgrade pip setuptools whee
 
 ```
 RUN pip install --no-cache-dir --upgrade pip==9.0.3 setuptools wheel && \
-    pip install --no-cache-dir \
-    flask \
-    future \
-    graphviz \
-    hypothesis \
-    jupyter==1.0.0 \
-    matplotlib==2.2.2 \
-    numpy \
-    protobuf \
-    pydot \
-    python-nvd3 \
-    pyyaml \
-    requests \
-    scikit-image \
-    scipy \
-    setuptools \
-    six \
-    tornado
+   pip install --no-cache-dir \
+   flask \
+   future \
+   graphviz \
+   hypothesis \
+   notebook==5.6.0 \
+   ipykernel==4.8.2 \
+   ipython==5.4.1 \
+   jupyter-console==5.0.0 \
+   jupyter==1.0.0 \
+   matplotlib==2.2.2 \
+   numpy \
+   protobuf \
+   pydot \
+   python-nvd3 \
+   pyyaml \
+   requests \
+   scikit-image \
+   scipy \
+   setuptools \
+   six \
+   tornado
 ```
 
 

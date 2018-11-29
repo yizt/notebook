@@ -62,9 +62,177 @@ np.where(y>2,2,np.where(y<2,1,y))
 
 4：concatenate、vstack、hstack、dstack、stack(会增加维度)
 
+concatenate在已经存在的维度上连接,除了连接的维度，其它维度必须相等
+
+```
+Examples
+--------
+>>> a = np.array([[1, 2], [3, 4]])
+>>> b = np.array([[5, 6]])
+>>> np.concatenate((a, b), axis=0)
+array([[1, 2],
+       [3, 4],
+       [5, 6]])
+>>> np.concatenate((a, b.T), axis=1)
+array([[1, 2, 5],
+       [3, 4, 6]])
+```
+
+stack在一个新的维度上连接数组
+
+```
+>>> a = np.array([1, 2, 3])
+>>> b = np.array([2, 3, 4])
+>>> np.stack((a, b))
+array([[1, 2, 3],
+       [2, 3, 4]])
+
+>>> np.stack((a, b), axis=-1)
+array([[1, 2],
+       [2, 3],
+       [3, 4]])
+```
+
+vstack在第一维上连接，返回最少二维，如果输入维度大于2位，不产生新的维度
+
+```
+Examples
+--------
+>>> a = np.array([1, 2, 3])
+>>> b = np.array([2, 3, 4])
+>>> np.vstack((a,b))
+array([[1, 2, 3],
+       [2, 3, 4]])
+
+>>> a = np.array([[1], [2], [3]])
+>>> b = np.array([[2], [3], [4]])
+>>> np.vstack((a,b))
+array([[1],
+       [2],
+       [3],
+       [2],
+       [3],
+       [4]])
+```
+
+hstack 在列上做连接，不会增加维度;输入维度>=2等价于np.concatenate((a,b),axis=1)
+
+```
+>>> a = np.array((1,2,3))
+>>> b = np.array((2,3,4))
+>>> np.hstack((a,b))
+array([1, 2, 3, 2, 3, 4])
+>>> a = np.array([[1],[2],[3]])
+>>> b = np.array([[2],[3],[4]])
+>>> np.hstack((a,b))
+array([[1, 2],
+       [2, 3],
+       [3, 4]])
+```
+
+
+
+
+
+
+
+
+
 5：split、hsplit、vsplit、dsplit
 
 6：tile、repeat
+
+repeat只能在一个维度上进行元素级别的复制，没有指定轴，就打平数组
+
+```
+Parameters
+----------
+a : array_like
+    Input array.
+repeats : int or array of ints
+    The number of repetitions for each element.  `repeats` is broadcasted
+    to fit the shape of the given axis.
+    repeats在指定轴的形状上广播
+axis : int, optional
+    The axis along which to repeat values.  By default, use the
+    flattened input array, and return a flat output array.
+    重复的轴，默认打平输入，打平输出
+
+>>> np.repeat(3, 4)
+array([3, 3, 3, 3])
+>>> x = np.array([[1,2],[3,4]])
+>>> np.repeat(x, 2)
+array([1, 1, 2, 2, 3, 3, 4, 4])
+>>> np.repeat(x, 3, axis=1)
+array([[1, 1, 1, 2, 2, 2],
+       [3, 3, 3, 4, 4, 4]])
+>>> np.repeat(x, [1, 2], axis=0)
+array([[1, 2],
+       [3, 4],
+       [3, 4]])
+>>>x=np.reshape(np.arange(24),(2,3,4))
+>>>np.repeat(x,[3,4],axis=0).shape
+(7, 3, 4)
+```
+
+
+
+tile
+
+在维度上复制数组
+
+```
+ tile(A, reps)
+
+Construct an array by repeating A the number of times given by reps.
+
+If `reps` has length ``d``, the result will have dimension of
+``max(d, A.ndim)``.
+
+If ``A.ndim < d``, `A` is promoted to be d-dimensional by prepending new
+axes. So a shape (3,) array is promoted to (1, 3) for 2-D replication,
+or shape (1, 1, 3) for 3-D replication. If this is not the desired
+behavior, promote `A` to d-dimensions manually before calling this
+function.
+提升A维度
+If ``A.ndim > d``, `reps` is promoted to `A`.ndim by pre-pending 1's to it.
+Thus for an `A` of shape (2, 3, 4, 5), a `reps` of (2, 2) is treated as
+(1, 1, 2, 2).
+提升reps维度
+
+Examples
+--------
+>>> a = np.array([0, 1, 2])
+>>> np.tile(a, 2)
+array([0, 1, 2, 0, 1, 2])
+>>> np.tile(a, (2, 2))
+array([[0, 1, 2, 0, 1, 2],
+       [0, 1, 2, 0, 1, 2]])
+>>> np.tile(a, (2, 1, 2))
+array([[[0, 1, 2, 0, 1, 2]],
+       [[0, 1, 2, 0, 1, 2]]])
+
+>>> b = np.array([[1, 2], [3, 4]])
+>>> np.tile(b, 2)
+array([[1, 2, 1, 2],
+       [3, 4, 3, 4]])
+>>> np.tile(b, (2, 1))
+array([[1, 2],
+       [3, 4],
+       [1, 2],
+       [3, 4]])
+
+>>> c = np.array([1,2,3,4])
+>>> np.tile(c,(4,1))
+array([[1, 2, 3, 4],
+       [1, 2, 3, 4],
+       [1, 2, 3, 4],
+       [1, 2, 3, 4]])
+```
+
+
+
+
 
 7：flip、fliplr、flipud
 

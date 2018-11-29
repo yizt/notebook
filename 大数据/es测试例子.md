@@ -879,3 +879,483 @@ it is information that contains key performance indicators (KPIs) for the health
 
 
 You can also use multi-metric jobs to split a single time series into multiple time series based on a categorical field. For example, you can split the data based on its hostnames, locations, or users. Each time series is modeled independently. By looking at temporal patterns on a per entity basis, you might spot things that might have otherwise been hidden in the lumped view.
+
+
+
+## filebeat
+
+es插件
+
+```
+bin/elasticsearch-plugin install ingest-user-agent
+```
+
+
+
+```
+./filebeat modules list
+./filebeat modules enable apache2 elasticsearch postgresql system nginx
+./filebeat setup --dashboards
+
+```
+
+```
+apache2
+auditd
+elasticsearch
+icinga
+iis
+kafka
+kibana
+logstash
+mongodb
+mysql
+nginx
+osquery
+postgresql
+redis
+system
+traefik
+
+```
+
+
+
+系统审计
+
+```
+mkdir /usermonitor
+chmod 777 -R /usermonitor
+```
+
+
+
+
+
+## metricbeat
+
+```
+bin/elasticsearch -E node.name=node191 -E network.host=192.168.3.191 -E node.master=true -E node.data=false -d
+bin/elasticsearch -E node.name=node192 -E network.host=192.168.3.192 -E node.master=false -E node.data=true -d
+bin/elasticsearch -E node.name=node193 -E network.host=192.168.3.193 -E node.master=false -E node.data=true -d
+```
+
+
+
+
+
+https://www.elastic.co/guide/en/beats/metricbeat/current/defining-processors.html
+
+
+
+
+
+https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-6.4.2-linux-x86_64.tar.gz
+
+https://artifacts.elastic.co/downloads/beats/packetbeat/packetbeat-6.4.2-linux-x86_64.tar.gz
+
+
+
+
+
+
+
+
+
+```
+./metricbeat modules enable kibana postgresql elasticsearch
+./metricbeat setup --dashboards
+
+./metricbeat -e -c metricbeat.yml
+```
+
+
+
+```
+Enabled:
+elasticsearch
+kibana
+postgresql
+system
+
+Disabled:
+aerospike
+apache
+ceph
+couchbase
+docker
+dropwizard
+envoyproxy
+etcd
+golang
+graphite
+haproxy
+http
+jolokia
+kafka
+kubernetes
+kvm
+logstash
+memcached
+mongodb
+munin
+mysql
+nginx
+php_fpm
+prometheus
+rabbitmq
+redis
+traefik
+uwsgi
+vsphere
+windows
+zookeeper
+
+```
+
+
+
+
+
+```
+{
+  "_index": "metricbeat-6.4.2-2018.11.20",
+  "_type": "doc",
+  "_id": "RJrcMGcBiKUpeSHNXV8m",
+  "_version": 1,
+  "_score": null,
+  "_source": {
+    "@timestamp": "2018-11-20T11:23:26.494Z",
+    "metricset": {
+      "name": "activity",
+      "module": "postgresql",
+      "host": "192.168.3.51:5432",
+      "rtt": 50729
+    },
+    "postgresql": {
+      "activity": {
+        "state_change": "2018-11-20T11:23:28.211Z",
+        "pid": 1654,
+        "application_name": "",
+        "query_start": "2018-11-20T11:23:28.211Z",
+        "backend_start": "2018-11-20T11:23:28.195Z",
+        "transaction_start": "2018-11-20T11:23:28.211Z",
+        "state": "active",
+        "client": {
+          "hostname": "",
+          "port": 37619,
+          "address": "192.168.3.191"
+        },
+        "query": "SELECT * FROM pg_stat_bgwriter",
+        "database": {
+          "oid": 13212,
+          "name": "postgres"
+        },
+        "user": {
+          "name": "postgres",
+          "id": 10
+        }
+      }
+    },
+    "beat": {
+      "name": "airflow-01.embrace.com",
+      "hostname": "airflow-01.embrace.com",
+      "version": "6.4.2"
+    },
+    "host": {
+      "name": "airflow-01.embrace.com"
+    }
+  },
+  "fields": {
+    "postgresql.activity.transaction_start": [
+      "2018-11-20T11:23:28.211Z"
+    ],
+    "@timestamp": [
+      "2018-11-20T11:23:26.494Z"
+    ],
+    "postgresql.activity.query_start": [
+      "2018-11-20T11:23:28.211Z"
+    ],
+    "postgresql.activity.backend_start": [
+      "2018-11-20T11:23:28.195Z"
+    ],
+    "postgresql.activity.state_change": [
+      "2018-11-20T11:23:28.211Z"
+    ]
+  },
+  "highlight": {
+    "postgresql.activity.query": [
+      "@kibana-highlighted-field@SELECT * FROM pg_stat_bgwriter@/kibana-highlighted-field@"
+    ],
+    "metricset.host": [
+      "@kibana-highlighted-field@192.168.3.51:5432@/kibana-highlighted-field@"
+    ]
+  },
+  "sort": [
+    1542713006494
+  ]
+}
+```
+
+
+
+
+
+## packetbeat
+
+
+
+必须是root用户;区分字段type
+
+```shell
+./packetbeat setup --dashboards
+./packetbeat -e -c packetbeat.yml
+```
+
+
+
+es插件安装
+
+```
+bin/elasticsearch-plugin install ingest-geoip
+```
+
+
+
+
+
+通用包之外的
+
+- [ICMP](https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-icmp-options.html)
+
+- [DNS](https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-dns-options.html)
+
+- [HTTP](https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-http-options.html)
+
+- [AMQP](https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-amqp-options.html)
+
+- [Cassandra](https://www.elastic.co/guide/en/beats/packetbeat/current/configuration-cassandra.html)
+
+- [Memcache](https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-memcache-options.html)
+
+- [MySQL and PgSQL](https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-mysql-pgsql-options.html)
+
+- [Thrift](https://www.elastic.co/guide/en/beats/packetbeat/current/configuration-thrift.html)
+
+- [MongoDB](https://www.elastic.co/guide/en/beats/packetbeat/current/configuration-mongodb.html)
+
+- [TLS](https://www.elastic.co/guide/en/beats/packetbeat/current/configuration-tls.html)
+
+  ​
+
+
+
+kibana console
+
+```
+PUT _ingest/pipeline/geoip-info
+{
+  "description": "Add geoip info",
+  "processors": [
+    {
+      "geoip": {
+        "field": "client_ip",
+        "target_field": "client_geoip",
+        "properties": ["location"],
+        "ignore_failure": true
+      }
+    }
+  ]
+}
+```
+
+
+
+
+
+
+
+```json
+{
+  "_index": "packetbeat-6.4.2-2018.11.20",
+  "_type": "doc",
+  "_id": "4TmCMGcBtwTbeWkIldH9",
+  "_version": 1,
+  "_score": null,
+  "_source": {
+    "@timestamp": "2018-11-20T09:45:22.610Z",
+    "icmp": {
+      "request": {
+        "message": "143(0)",
+        "type": 143,
+        "code": 0
+      },
+      "version": 6
+    },
+    "client_ip": "fe80::e9:58da:6f5e:8fda",
+    "beat": {
+      "name": "airflow-01.embrace.com",
+      "hostname": "airflow-01.embrace.com",
+      "version": "6.4.2"
+    },
+    "type": "icmp",
+    "status": "OK",
+    "ip": "ff02::16",
+    "host": {
+      "name": "airflow-01.embrace.com"
+    },
+    "path": "ff02::16",
+    "bytes_in": 20
+  },
+  "fields": {
+    "@timestamp": [
+      "2018-11-20T09:45:22.610Z"
+    ]
+  },
+  "highlight": {
+    "type": [
+      "@kibana-highlighted-field@icmp@/kibana-highlighted-field@"
+    ]
+  },
+  "sort": [
+    1542707122610
+  ]
+}
+```
+
+
+
+```json
+{
+  "_index": "packetbeat-6.4.2-2018.11.20",
+  "_type": "doc",
+  "_id": "ADmCMGcBtwTbeWkIQ9HG",
+  "_version": 1,
+  "_score": null,
+  "_source": {
+    "@timestamp": "2018-11-20T09:45:01.235Z",
+    "proc": "",
+    "direction": "in",
+    "type": "http",
+    "http": {
+      "request": {
+        "params": "packages=x1.txt%2C+t2.txt",
+        "headers": {
+          "content-length": 0
+        }
+      },
+      "response": {
+        "headers": {
+          "content-length": 139,
+          "content-type": "application/json"
+        },
+        "code": 204,
+        "phrase": "No Content"
+      }
+    },
+    "beat": {
+      "name": "airflow-01.embrace.com",
+      "hostname": "airflow-01.embrace.com",
+      "version": "6.4.2"
+    },
+    "client_server": "",
+    "ip": "192.168.3.191",
+    "client_port": 58954,
+    "bytes_in": 825,
+    "responsetime": 4,
+    "client_ip": "192.168.2.248",
+    "path": "/andible/packages/remove",
+    "client_proc": "",
+    "server": "",
+    "host": {
+      "name": "airflow-01.embrace.com"
+    },
+    "status": "OK",
+    "query": "DELETE /andible/packages/remove",
+    "port": 8000,
+    "method": "DELETE",
+    "bytes_out": 222
+  },
+  "fields": {
+    "@timestamp": [
+      "2018-11-20T09:45:01.235Z"
+    ]
+  },
+  "highlight": {
+    "type": [
+      "@kibana-highlighted-field@http@/kibana-highlighted-field@"
+    ]
+  },
+  "sort": [
+    1542707101235
+  ]
+}
+```
+
+
+
+```
+{
+  "_index": "packetbeat-6.4.2-2018.11.20",
+  "_type": "doc",
+  "_id": "oTmMMGcBtwTbeWkIduuD",
+  "_version": 1,
+  "_score": null,
+  "_source": {
+    "@timestamp": "2018-11-20T09:56:10.000Z",
+    "start_time": "2018-11-20T09:55:22.392Z",
+    "last_time": "2018-11-20T09:55:22.392Z",
+    "type": "flow",
+    "host": {
+      "name": "airflow-01.embrace.com"
+    },
+    "transport": "tcp",
+    "beat": {
+      "version": "6.4.2",
+      "name": "airflow-01.embrace.com",
+      "hostname": "airflow-01.embrace.com"
+    },
+    "source": {
+      "ip": "192.168.1.100",
+      "port": 62337,
+      "stats": {
+        "net_packets_total": 1,
+        "net_bytes_total": 108
+      }
+    },
+    "dest": {
+      "ip": "192.168.3.191",
+      "port": 22,
+      "stats": {
+        "net_packets_total": 1,
+        "net_bytes_total": 56
+      }
+    },
+    "flow_id": "EAT/////AP//////CP8AAAHAqAFkwKgDv4HzFgA",
+    "final": false
+  },
+  "fields": {
+    "start_time": [
+      "2018-11-20T09:55:22.392Z"
+    ],
+    "@timestamp": [
+      "2018-11-20T09:56:10.000Z"
+    ],
+    "last_time": [
+      "2018-11-20T09:55:22.392Z"
+    ]
+  },
+  "highlight": {
+    "source.ip": [
+      "@kibana-highlighted-field@192.168.1.100@/kibana-highlighted-field@"
+    ],
+    "type": [
+      "@kibana-highlighted-field@flow@/kibana-highlighted-field@"
+    ]
+  },
+  "sort": [
+    1542707770000
+  ]
+}
+```
+

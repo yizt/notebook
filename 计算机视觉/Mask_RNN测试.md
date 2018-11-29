@@ -1,4 +1,6 @@
+[TOC]
 
+## 项目信息
 
 项目地址：https://github.com/matterport/Mask_RCNN
 
@@ -24,9 +26,105 @@ pip3 install imgaug
 
 
 
+## 源码分析
+
+### ProposalLayer
+
+```
+    """Receives anchor scores and selects a subset to pass as proposals
+    to the second stage. Filtering is done based on anchor scores and
+    non-max suppression to remove overlaps. It also applies bounding
+    box refinement deltas to anchors.
+
+    Inputs:
+        rpn_probs: [batch, anchors, (bg prob, fg prob)]
+        rpn_bbox: [batch, anchors, (dy, dx, log(dh), log(dw))]
+        anchors: [batch, (y1, x1, y2, x2)] anchors in normalized coordinates
+
+    Returns:
+        Proposals in normalized coordinates [batch, rois, (y1, x1, y2, x2)]
+    """
+```
+
+根据anchor分数和NMS选择anchor;并进行回归生成最终的proposals
 
 
 
+#### tf.image.non_max_suppression
+
+```python
+  """Greedily selects a subset of bounding boxes in descending order of score.
+
+  Prunes away boxes that have high intersection-over-union (IOU) overlap
+  with previously selected boxes.  Bounding boxes are supplied as
+  [y1, x1, y2, x2], where (y1, x1) and (y2, x2) are the coordinates of any
+  diagonal pair of box corners and the coordinates can be provided as normalized
+  (i.e., lying in the interval [0, 1]) or absolute.  Note that this algorithm
+  is agnostic to where the origin is in the coordinate system.  Note that this
+  algorithm is invariant to orthogonal transformations and translations
+  of the coordinate system; thus translating or reflections of the coordinate
+  system result in the same boxes being selected by the algorithm.
+  The output of this operation is a set of integers indexing into the input
+  collection of bounding boxes representing the selected boxes.  The bounding
+  box coordinates corresponding to the selected indices can then be obtained
+  using the `tf.gather operation`.  For example:
+    selected_indices = tf.image.non_max_suppression(
+        boxes, scores, max_output_size, iou_threshold)
+    selected_boxes = tf.gather(boxes, selected_indices)
+
+  Args:
+    boxes: A 2-D float `Tensor` of shape `[num_boxes, 4]`.
+    scores: A 1-D float `Tensor` of shape `[num_boxes]` representing a single
+      score corresponding to each box (each row of boxes).
+    max_output_size: A scalar integer `Tensor` representing the maximum number
+      of boxes to be selected by non max suppression.
+    iou_threshold: A float representing the threshold for deciding whether boxes
+      overlap too much with respect to IOU.
+    score_threshold: A float representing the threshold for deciding when to
+      remove boxes based on score.
+    name: A name for the operation (optional).
+    
+```
+
+
+
+### DetectionTargetLayer
+
+```python
+"""Subsamples proposals and generates target box refinement, class_ids,
+    and masks for each.
+
+    Inputs:
+    proposals: [batch, N, (y1, x1, y2, x2)] in normalized coordinates. Might
+               be zero padded if there are not enough proposals.
+    gt_class_ids: [batch, MAX_GT_INSTANCES] Integer class IDs.
+    gt_boxes: [batch, MAX_GT_INSTANCES, (y1, x1, y2, x2)] in normalized
+              coordinates.
+    gt_masks: [batch, height, width, MAX_GT_INSTANCES] of boolean type
+
+    Returns: Target ROIs and corresponding class IDs, bounding box shifts,
+    and masks.
+    rois: [batch, TRAIN_ROIS_PER_IMAGE, (y1, x1, y2, x2)] in normalized
+          coordinates
+    target_class_ids: [batch, TRAIN_ROIS_PER_IMAGE]. Integer class IDs.
+    target_deltas: [batch, TRAIN_ROIS_PER_IMAGE, NUM_CLASSES,
+                    (dy, dx, log(dh), log(dw), class_id)]
+                   Class-specific bbox refinements.
+    target_mask: [batch, TRAIN_ROIS_PER_IMAGE, height, width)
+                 Masks cropped to bbox boundaries and resized to neural
+                 network output size.
+
+    Note: Returned arrays might be zero padded if not enough target ROIs.
+    """
+```
+
+采样proposals生成检测边框的分类目标和回归目标、
+
+
+
+#### overlaps_graph
+
+​        tf的iou计算
 
 ## 错误记录
 
