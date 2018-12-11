@@ -72,12 +72,33 @@ trusted-host = pypi.douban.com
 
 
 
+pip迁移
+
+```
+pip freeze > requirements.txt
+
+pip install -r requirements.txt
+
+```
+
+
+
 ### conda
 
 ```shell
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
 conda config --set show_channel_urls yes
+```
+
+
+
+conda迁移
+
+```
+conda env export > environment.yaml
+
+conda env create -f environment.yaml
 ```
 
 
@@ -172,6 +193,12 @@ for i in zip(*nums):
 ```
 
 
+
+
+
+## web框架
+
+http://klen.github.io/py-frameworks-bench/
 
 
 
