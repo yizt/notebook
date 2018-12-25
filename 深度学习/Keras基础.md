@@ -648,3 +648,93 @@ m.fit_generator(generator=gen_data(train_img_infos, batch_size),
                     initial_epoch=initial_epoch)
 ```
 
+
+
+
+
+## 总结
+
+1) tf数据类型：不同数据类型不能操作
+
+2) Model多输入多输出,inputs，outputs都是list
+
+3) Layer多输入多输出，input_shape是list(tuple), compute_output_shape返回的也是list(tuple)
+
+4) 可以自定义loss层，直接使用`model.add_loss(loss)` ;例如：
+
+```python
+loss_names = ["rpn_bbox_loss", "rpn_class_loss"]  # , "rpn_bbox_loss",rpn_class_loss
+    for name in loss_names:
+        layer = keras_model.get_layer(name)
+        if layer.output in keras_model.losses:
+            continue
+        loss = (
+                tf.reduce_mean(layer.output, keepdims=True)
+                * config.LOSS_WEIGHTS.get(name, 1.))
+        keras_model.add_loss(loss)
+```
+
+5) 可以直接增加统计指标，使用`model.metrics_names.append`和`keras_model.metrics_tensors.append`  ，例如
+
+```python
+    layer = keras_model.get_layer('rpn_target')
+    keras_model.metrics_names.append('gt_num')
+    keras_model.metrics_tensors.append(layer.output[3])
+```
+
+
+
+6) tf 调试,使用如下样例代码
+
+```python
+    from tensorflow.python import debug as tf_debug
+    import keras.backend as K
+
+    sess = K.get_session()
+    sess = tf_debug.LocalCLIDebugWrapperSession(sess)
+    sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
+
+    K.set_session(sess)
+```
+
+a) 在定义Tensor张量时，增加name属性
+
+b) pt tensor (可以使用name名字检索)
+
+c) ls -n Node ,按照节点**列出涉及节点创建的python源文件** ; tf报错堆栈,有时不会展示出错的源代码位置
+
+参考：[Debugging 调试Tensorflow 程序](https://blog.csdn.net/u010312436/article/details/78656723/)
+
+其它:使用tf.Print()和tf.Assert()打印变量
+
+7) Input除了使用shape参数，也可以使用batch_shape,比shape长度大1；tuple第一个元素是batch_size大小
+
+8) 孪生网络共享部分层的网络参数，如何设计？keras共享参数就是共享节点(层)；不共享参数，就不共享节点(层)
+
+9) loss损失函数，如果有使用到最后一层的weights；通过将loss函数定义到用到weight的层中来实现；参考：https://github.com/LCorleone/Various-loss-function-in-face-recognition/blob/master/utils/utils_func.py
+
+10) keras如下方式手工更新weights，初始权重; 但是无法在训练中手工更新权重：https://github.com/keras-team/keras/issues/11143
+
+- `layer.set_weights(weights)`: sets the weights of the layer from a list of Numpy arrays (with the same shapes as the output of `get_weights`).
+
+
+​        使用tf.add_to_collection(K.tf.GraphKeys.UPDATE_OPS, weights_update_op) 将修改权重的操作增加到计算图中.
+
+​        如docface+的loss函数：
+
+```python
+weights_update_op_1 = K.tf.scatter_mul(self.kernel, labels, 1.0 - self.alpha)  # w = (1-a)*w
+        weights_update_op_2 = K.tf.scatter_sub(self.kernel, labels, w_batch)  # w = w + a* w_batch
+
+        with K.tf.control_dependencies([weights_update_op_1, weights_update_op_2]):
+            weights_update_op = K.tf.assign(self.kernel,
+                                            K.tf.nn.l2_normalize(self.kernel, axis=1))  # w_j^* 归一化
+        # 加到Graph图中
+        K.tf.add_to_collection(K.tf.GraphKeys.UPDATE_OPS, weights_update_op)
+        # 最后返回损失函数
+        return K.categorical_crossentropy(y_true, cosine_m * self.scale, from_logits=True)
+```
+
+
+
+
