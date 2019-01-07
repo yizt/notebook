@@ -613,6 +613,25 @@ model.fit(X_train, Y_train, batch_size=128, epochs=20, verbose=0, validation_dat
 
 
 
+## backend
+
+set_value
+
+​           使用一个numpy数组给一个tensor变量赋值
+
+```python
+def set_value(x, value):
+  """Sets the value of a variable, from a Numpy array.
+
+  Arguments:
+      x: Tensor to set to a new value.
+      value: Value to set the tensor to, as a Numpy array
+          (of the same shape).
+  """
+```
+
+
+
 ## 预训练模型
 
 下载地址：https://github.com/fchollet/deep-learning-models/releases/
@@ -647,6 +666,8 @@ m.fit_generator(generator=gen_data(train_img_infos, batch_size),
                     callbacks=get_call_back(backbone_model),
                     initial_epoch=initial_epoch)
 ```
+
+
 
 
 
@@ -737,4 +758,12 @@ weights_update_op_1 = K.tf.scatter_mul(self.kernel, labels, 1.0 - self.alpha)  #
 
 
 
+11) keras 获取中间某一层的输出; 使用`K.function` ;
+
+```python
+fun = K.function([model.input], [model.layers[-2].output])
+features = fun([new_imgs])[0]
+```
+
+​    参考：https://stackoverflow.com/questions/41711190/keras-how-to-get-the-output-of-each-layer
 
