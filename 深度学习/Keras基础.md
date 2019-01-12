@@ -767,3 +767,53 @@ features = fun([new_imgs])[0]
 
 ​    参考：https://stackoverflow.com/questions/41711190/keras-how-to-get-the-output-of-each-layer
 
+
+
+12) keras m.load_weights(pretrained_weights, by_name=True); 其中的layer一定要有name;切记
+
+
+
+13) K.sparse_categorical_crossentropy 与keras.losses.sparse_categorical_crossentropy 目前效果有差别，不清楚为什么？前者训练不收敛？ 如下方式包装一下也不收敛，应当是keras本身bug吧
+
+```python
+    def my_sparse(y_true,y_pred):
+        return keras.losses.sparse_categorical_crossentropy(y_true,y_pred)
+```
+
+
+
+14) 如果需要在训练的每一个step之后输出一些张量，可以讲张量保存到一个不训练的权重中；如下例子，说明如何在每个step之后获取预测的结果
+
+```python
+   def build(self, input_shape):
+   		self.y_pred = self.add_weight(name='pred',
+                                      shape=(self.output_dim, self.output_dim),
+                                      initializer='glorot_normal',
+                                      trainable=False)
+   def loss(self, y_true, y_pred):
+        # 首先将预测值保持到权重中
+        pred_assign_op = K.tf.assign(self.y_pred,
+                                     y_pred,
+                                     name='assign_pred')
+        with K.tf.control_dependencies([pred_assign_op]):
+            y_true = y_true[:, 0]  # 非常重要，默认是二维的
+            y_true_mask = K.one_hot(K.tf.cast(y_true, dtype='int32'), self.output_dim)
+            cosine_m = y_pred - y_true_mask * self.margin  # cosine-m
+            losses = K.sparse_categorical_crossentropy(target=y_true,
+                                                       output=cosine_m * self.scale,
+                                                       from_logits=True)
+
+        return losses
+   
+```
+
+ 
+
+最后获取在callback中获取
+
+```python
+    def on_batch_end(self, batch, logs=None):
+        layer = self.model.layers[-1]
+        trained_weights, current_trained_labels, y_pred = layer.get_weights()[:3]
+```
+
