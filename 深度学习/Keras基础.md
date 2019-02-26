@@ -677,7 +677,7 @@ m.fit_generator(generator=gen_data(train_img_infos, batch_size),
 
 1) tf数据类型：不同数据类型不能操作
 
-2) Model多输入多输出,inputs，outputs都是list
+2) Model多输入多输出,inputs，outputs都是list;对于多输出call返回必须是列表，不能是tuple
 
 3) Layer多输入多输出，input_shape是list(tuple), compute_output_shape返回的也是list(tuple)
 
@@ -703,7 +703,7 @@ loss_names = ["rpn_bbox_loss", "rpn_class_loss"]  # , "rpn_bbox_loss",rpn_class_
     keras_model.metrics_tensors.append(layer.output[3])
 ```
 
-
+​       <font color=#ff0000 >注意指标必须是float类型</font>
 
 6) tf 调试,使用如下样例代码
 
@@ -815,5 +815,58 @@ features = fun([new_imgs])[0]
     def on_batch_end(self, batch, logs=None):
         layer = self.model.layers[-1]
         trained_weights, current_trained_labels, y_pred = layer.get_weights()[:3]
+```
+
+
+
+15：度量的值必须是float32类型
+
+```
+2/3 [===================>..........] - ETA: 4s - loss: 2.2542 - rpn_bbox_loss: 0.7040 - rpn_class_loss: 1.5502 - gt_num: 5.0000 - positive_anchor_num: 65.0000 - miss_match_gt_num: 2.7500Traceback (most recent call last):
+  File "train.py", line 67, in <module>
+    verbose=1)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/legacy/interfaces.py", line 91, in wrapper
+    return func(*args, **kwargs)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/engine/training.py", line 1426, in fit_generator
+    initial_epoch=initial_epoch)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/engine/training_generator.py", line 229, in fit_generator
+    callbacks.on_epoch_end(epoch, epoch_logs)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/callbacks.py", line 77, in on_epoch_end
+    callback.on_epoch_end(epoch, logs)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/callbacks.py", line 336, in on_epoch_end
+    self.progbar.update(self.seen, self.log_values)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/utils/generic_utils.py", line 338, in update
+    self._values[k][0] += v * (current - self._seen_so_far)
+TypeError: Cannot cast ufunc add output from dtype('float64') to dtype('int32') with casting rule 'same_kind'
+
+```
+
+
+
+16: layers的输入，必须是Input或者其他Layer的输出项，不能是做张量操作后的项，不然报错：`'NoneType' object has no attribute '_inbound_nodes'`
+
+如下代码会报错：
+
+```python
+anchors = ClipBoxes(name='clip')([anchors, input_image_meta[:, 7:11]])
+```
+
+需要改为
+
+```python
+wins = Lambda(lambda x: x[:, 7:11])(input_image_meta)
+anchors = ClipBoxes(name='clip')([anchors, wins])
+```
+
+
+
+报错如下：
+
+```
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/engine/network.py", line 1353, in build_map
+    node_index, tensor_index)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/engine/network.py", line 1325, in build_map
+    node = layer._inbound_nodes[node_index]
+AttributeError: 'NoneType' object has no attribute '_inbound_nodes'
 ```
 
