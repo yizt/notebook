@@ -677,9 +677,9 @@ m.fit_generator(generator=gen_data(train_img_infos, batch_size),
 
 1) tf数据类型：不同数据类型不能操作
 
-2) Model多输入多输出,inputs，outputs都是list;对于多输出call返回必须是列表，不能是tuple
+2) Model多输入多输出,inputs，outputs都是list;
 
-3) Layer多输入多输出，input_shape是list(tuple), compute_output_shape返回的也是list(tuple)
+3) Layer多输入多输出，input_shape是list(tuple), compute_output_shape返回的也是list(tuple)；对于多输出call返回必须是列表，不能是tuple
 
 4) 可以自定义loss层，直接使用`model.add_loss(loss)` ;例如：
 
@@ -838,7 +838,6 @@ features = fun([new_imgs])[0]
   File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/utils/generic_utils.py", line 338, in update
     self._values[k][0] += v * (current - self._seen_so_far)
 TypeError: Cannot cast ufunc add output from dtype('float64') to dtype('int32') with casting rule 'same_kind'
-
 ```
 
 
@@ -869,4 +868,61 @@ anchors = ClipBoxes(name='clip')([anchors, wins])
     node = layer._inbound_nodes[node_index]
 AttributeError: 'NoneType' object has no attribute '_inbound_nodes'
 ```
+
+
+
+17：tf.argmax需要考虑维度为零的情况，例如: GT 为0时
+
+```python
+    # anchors_iou_argmax = tf.argmax(iou, axis=0)  # 每个anchor最大iou对应的GT 索引 [n]
+    anchors_iou_argmax = tf.cond(   # 需要考虑GT个数为0的情况
+        tf.greater(tf.shape(iou)[0], 0),
+        true_fn = lambda: tf.argmax(iou, axis=0),
+        false_fn = lambda: tf.cast(tf.constant([]),tf.int64)
+    )
+```
+
+
+
+18：compute_output_shape函数没有作用；报`list index out of range`
+
+```shell
+Traceback (most recent call last):
+  File "second_stage_retina_gt_stat.py", line 214, in <module>
+    main()
+  File "second_stage_retina_gt_stat.py", line 153, in main
+    config.SECOND_STRIDE)
+  File "second_stage_retina_gt_stat.py", line 126, in second_stage_retina_gt_net
+    [input_second_boxes, input_second_class_ids, second_anchors, rois, second_windows, second_scales])
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/engine/base_layer.py", line 497, in __call__
+    arguments=user_kwargs)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/engine/base_layer.py", line 565, in _add_inbound_node
+    output_tensors[i]._keras_shape = output_shapes[i]
+IndexError: list index out of range
+
+```
+
+
+
+原因：必须所有input_shape都不为None，compute_output_shape才有作用；如果输入中有标量，且Input中指定的是shape,那么input_shape中就有为None的，
+
+```python
+            if all([s is not None
+                    for s in to_list(input_shape)]):
+                output_shape = self.compute_output_shape(input_shape)
+            else:
+                if isinstance(input_shape, list):
+                    output_shape = [None for _ in input_shape]
+                else:
+                    output_shape = None
+```
+
+解决办法：Input使用batch_shape初始化;如
+
+```python
+	input_image_meta = Input(batch_shape=(batch_size, 12))
+    input_class_ids = Input(batch_shape=(batch_size, max_gt_num, 2))
+```
+
+
 
