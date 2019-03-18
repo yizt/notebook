@@ -63,6 +63,16 @@ sandbox/proxy/proxy-deploy.sh
 
 
 
+## 非代理启动
+
+```shell
+docker run -d --privileged --network host --hostname sandbox-hdp sandbox-hdp:backup
+```
+
+
+
+
+
 ### 使用
 
 a) 访问 http://master:4200/

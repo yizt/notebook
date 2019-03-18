@@ -671,13 +671,36 @@ m.fit_generator(generator=gen_data(train_img_infos, batch_size),
 
 
 
+## 常见错误
 
+1. tf.where(x>1,x,1);   tf.where中，x,y必须维度一致
+2. tf.minimum(tf.shape(positive_indices)[0], train_anchors_num * positive_ratios); 数据类型必须一致
 
 ## 总结
 
 1) tf数据类型：不同数据类型不能操作
 
-2) Model多输入多输出,inputs，outputs都是list;
+2) Model多输入多输出,inputs，outputs都是list; 也可以是字典类型;Input层名字对应字典的key,如：
+
+```python
+	   inputs = {'the_input': X_data,
+                  'the_labels': labels,
+                  'input_length': input_length,
+                  'label_length': label_length,
+                  'source_str': source_str  # used for visualization only
+                  }
+        outputs = {'ctc': np.zeros([size])}  # dummy data for dummy loss function
+        return (inputs, outputs)
+    
+input_data = Input(name='the_input', shape=input_shape, dtype='float32') 
+labels = Input(name='the_labels', shape=[img_gen.absolute_max_string_len], dtype='float32')
+input_length = Input(name='input_length', shape=[1], dtype='int64')
+label_length = Input(name='label_length', shape=[1], dtype='int64')
+loss_out = Lambda(ctc_lambda_func, output_shape=(1,), name='ctc')([y_pred, labels, input_length, label_length])
+model = Model(inputs=[input_data, labels, input_length, label_length], outputs=loss_out)
+```
+
+
 
 3) Layer多输入多输出，input_shape是list(tuple), compute_output_shape返回的也是list(tuple)；对于多输出call返回必须是列表，不能是tuple
 
@@ -926,3 +949,48 @@ IndexError: list index out of range
 
 
 
+19：Tensorflow: map_fn does not work in Graph mode during training, in Eager mode it does
+
+```shell
+    self._session._session, self._handle, args, status, None)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/tensorflow/python/framework/errors_impl.py", line 519, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.NotFoundError: Resource __per_step_8/_tensor_arraysrpn2proposals/map/TensorArray_2_17/N10tensorflow11TensorArrayE does not exist.
+	 [[Node: training/SGD/gradients/rpn2proposals/map/TensorArrayStack/TensorArrayGatherV3_grad/TensorArrayGrad/TensorArrayGradV3 = TensorArrayGradV3[_class=["loc:@train...yScatterV3"], source="training/SGD/gradients", _device="/job:localhost/replica:0/task:0/device:CPU:0"](rpn2proposals/map/TensorArray_2/_2645, rpn2proposals/map/while/Exit_2/_2665)]]
+	 [[Node: rpn2proposals/map_1/TensorArrayUnstack/range/_2906 = _HostSend[T=DT_INT32, client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_10460_rpn2proposals/map_1/TensorArrayUnstack/range", _device="/job:localhost/replica:0/task:0/device:GPU:0"](rpn2proposals/map_1/TensorArrayUnstack/range)]]
+```
+
+参考;https://stackoverflow.com/questions/52187269/tensorflow-map-fn-does-not-work-in-graph-mode-during-training-in-eager-mode-it
+
+
+
+20：
+
+```shell
+1272/2505 [==============>...............] - ETA: 3:39 - loss: 2.1422 - rpn_bbox_loss: 0.8695 - rpn_class_loss: 0.2466 - rcnn_bbox_loss: 0.4770 - rcnn_class_loss: 0.5491 - gt_num: 3.1545 - positive_anchor_num: 16.7732 - miss_match_gt_num: 0.0000e+00 - gt_match_min_iou: 0.5314 - rcnn_miss_match_gt_num: 1.17102019-03-05 17:09:47.005883: W tensorflow/core/framework/op_kernel.cc:1318] OP_REQUIRES failed at tensor_array_ops.cc:497 : Invalid argument: TensorArray rcnn_target/map/TensorArray_5_175757@training/SGD/gradients: Could not read from TensorArray index 1.  Furthermore, the element shape is not fully defined: <unknown>.  It is possible you are working with a resizeable TensorArray and stop_gradients is not allowing the gradients to be written.  If you set the full element_shape property on the forward TensorArray, the proper all-zeros tensor will be returned instead of incurring this error.
+Traceback (most recent call last):
+  File "train.py", line 114, in <module>
+    main(argments)
+  File "train.py", line 96, in main
+    callbacks=get_call_back('rcnn'))
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/legacy/interfaces.py", line 91, in wrapper
+    return func(*args, **kwargs)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/engine/training.py", line 1418, in fit_generator
+    initial_epoch=initial_epoch)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/engine/training_generator.py", line 217, in fit_generator
+    class_weight=class_weight)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/engine/training.py", line 1217, in train_on_batch
+    outputs = self.train_function(ins)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/backend/tensorflow_backend.py", line 2715, in __call__
+    return self._call(inputs)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/keras/backend/tensorflow_backend.py", line 2675, in _call
+    fetched = self._callable_fn(*array_vals)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1454, in __call__
+    self._session._session, self._handle, args, status, None)
+  File "/root/anaconda3/envs/keras/lib/python3.6/site-packages/tensorflow/python/framework/errors_impl.py", line 519, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: TensorArray rcnn_target/map/TensorArray_5_175757@training/SGD/gradients: Could not read from TensorArray index 1.  Furthermore, the element shape is not fully defined: <unknown>.  It is possible you are working with a resizeable TensorArray and stop_gradients is not allowing the gradients to be written.  If you set the full element_shape property on the forward TensorArray, the proper all-zeros tensor will be returned instead of incurring this error.
+	 [[Node: training/SGD/gradients/rcnn_target/map/while/TensorArrayWrite_2/TensorArrayWriteV3_grad/TensorArrayReadV3 = TensorArrayReadV3[_class=["loc:@rcnn_target/map/while/TensorArrayWrite_2/TensorArrayWriteV3"], dtype=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:GPU:0"](training/SGD/gradients/rcnn_target/map/while/TensorArrayWrite_2/TensorArrayWriteV3_grad/TensorArrayGrad/TensorArrayGradV3, training/SGD/gradients/rcnn_target/map/while/TensorArrayWrite/TensorArrayWriteV3_grad/TensorArrayReadV3/StackPopV2, training/SGD/gradients/rcnn_target/map/while/Merge_4_grad/Switch:1)]]
+```
+
+参考：https://github.com/tensorflow/tensorflow/issues/22448

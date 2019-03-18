@@ -1,5 +1,33 @@
 [TOC]
 
+## 知识点
+
+a) 通用padding到固定尺寸,删除padding
+
+b) 图像加载
+
+c) 图像resize、图像元数据信息、GT boxes调整
+
+d) 图像还原
+
+1：anchor生成
+
+2：IoU、非极大抑制(nms)
+
+3：rpn分类和回归目标
+
+4：应用回归目标生成proposal
+
+5：RoIAlign
+
+6：rpn 分类和回归损失(类别无关、anchors映射)
+
+7：rcnn分类和回归目标(类别相关)
+
+8：应用rcnn回归目标生成最终检测框
+
+
+
 ### IoU计算
 
 #### numpy

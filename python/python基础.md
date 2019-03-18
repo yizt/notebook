@@ -230,9 +230,34 @@ foo(1,2,3,4,y=1,a=2,b=3,c=4)
 
 
 
+### 参数解析
+
+```python
+import argpase
+if __name__ == '__main__':
+	parse = argparse.ArgumentParser()
+    parse.add_argument("--stages", type=str, nargs='+', default=['train'], help="stage: init、train")
+    argments = parse.parse_args(sys.argv[1:])
+    # print(argments)
+    # useage: python pipeline.py --stages init train | python pipeline.py --stages train
+    main(argments)
+```
+
+
+
+
+
 ### 导入
 
 相对路径导入
+
+```python
+if __package__ is None:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+    __package__ = "keras-lbl-IvS"
+```
+
+
 
 绝对路径导入
 
