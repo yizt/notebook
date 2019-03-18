@@ -947,7 +947,7 @@ IndexError: list index out of range
     input_class_ids = Input(batch_shape=(batch_size, max_gt_num, 2))
 ```
 
-
+或者将变量转为1位张量(推荐此方法)
 
 19：Tensorflow: map_fn does not work in Graph mode during training, in Eager mode it does
 
@@ -962,9 +962,11 @@ tensorflow.python.framework.errors_impl.NotFoundError: Resource __per_step_8/_te
 
 参考;https://stackoverflow.com/questions/52187269/tensorflow-map-fn-does-not-work-in-graph-mode-during-training-in-eager-mode-it
 
+解决方法：使用batch_slice自定义函数；
 
 
-20：
+
+20：Could not read from TensorArray index 1
 
 ```shell
 1272/2505 [==============>...............] - ETA: 3:39 - loss: 2.1422 - rpn_bbox_loss: 0.8695 - rpn_class_loss: 0.2466 - rcnn_bbox_loss: 0.4770 - rcnn_class_loss: 0.5491 - gt_num: 3.1545 - positive_anchor_num: 16.7732 - miss_match_gt_num: 0.0000e+00 - gt_match_min_iou: 0.5314 - rcnn_miss_match_gt_num: 1.17102019-03-05 17:09:47.005883: W tensorflow/core/framework/op_kernel.cc:1318] OP_REQUIRES failed at tensor_array_ops.cc:497 : Invalid argument: TensorArray rcnn_target/map/TensorArray_5_175757@training/SGD/gradients: Could not read from TensorArray index 1.  Furthermore, the element shape is not fully defined: <unknown>.  It is possible you are working with a resizeable TensorArray and stop_gradients is not allowing the gradients to be written.  If you set the full element_shape property on the forward TensorArray, the proper all-zeros tensor will be returned instead of incurring this error.
@@ -994,3 +996,12 @@ tensorflow.python.framework.errors_impl.InvalidArgumentError: TensorArray rcnn_t
 ```
 
 参考：https://github.com/tensorflow/tensorflow/issues/22448
+
+解决方法：使用batch_slice自定义函数;
+
+
+
+21：Keras模型可以在不同的层有不同的batch_size;但是keras的输入和输出必须保证所有的batch_size一致;例子见[keras_diff_batch_size](keras_diff_batch_size.py)
+
+
+
