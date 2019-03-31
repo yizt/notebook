@@ -104,7 +104,7 @@ def display_polygon(image, polygons, scores=None, figsize=(16, 16), ax=None, col
         patch = patches.Polygon(polygon, facecolor=None, fill=False, color=color)
         ax.add_patch(patch)
         # 多边形得分
-        x1, y1 = polygons[0][0], polygons[0][1]
+        x1, y1 = polygon[0][0], polygon[0][1]
         ax.text(x1, y1 + 8, scores[i] if scores is not None else '',
                 color='w', size=11, backgroundcolor="none")
     if auto_show:
