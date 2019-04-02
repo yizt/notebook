@@ -1003,5 +1003,132 @@ tensorflow.python.framework.errors_impl.InvalidArgumentError: TensorArray rcnn_t
 
 21：Keras模型可以在不同的层有不同的batch_size;但是keras的输入和输出必须保证所有的batch_size一致;例子见[keras_diff_batch_size](keras_diff_batch_size.py)
 
+22: 模型多gpu训练
 
+a) 设置可用gpu,以及allow_soft_placement参数为True
+
+```python
+def set_gpu_growth(gpu_count):
+    os.environ["CUDA_VISIBLE_DEVICES"] = ",".join([str(i) for i in range(gpu_count)])
+    cfg = tf.ConfigProto(allow_soft_placement=True)  # because no supported kernel for GPU devices is available
+    cfg.gpu_options.allow_growth = True  # 可选
+    session = tf.Session(config=cfg)
+    keras.backend.set_session(session)
+```
+
+
+
+b) 增加并行模型类
+
+```python
+import tensorflow as tf
+import keras.backend as K
+import keras.layers as KL
+import keras.models as KM
+
+
+def make_parallel(keras_model, gpu_count):
+    """Creates a new wrapper model that consists of multiple replicas of
+    the original model placed on different GPUs.
+    Args:
+        keras_model: the input model to replicate on multiple gpus
+        gpu_count: the number of replicas to build
+    Returns:
+        Multi-gpu model
+    """
+    # Slice inputs. Slice inputs on the CPU to avoid sending a copy
+    # of the full inputs to all GPUs. Saves on bandwidth and memory.
+    input_slices = {name: tf.split(x, gpu_count)
+                    for name, x in zip(keras_model.input_names,
+                                       keras_model.inputs)}
+
+    output_names = keras_model.output_names
+    outputs_all = []
+    for i in range(len(keras_model.outputs)):
+        outputs_all.append([])
+
+    # Run the model call() on each GPU to place the ops there
+    for i in range(gpu_count):
+        with tf.device('/gpu:%d' % i):
+            with tf.name_scope('tower_%d' % i):
+                # Run a slice of inputs through this replica
+                zipped_inputs = zip(keras_model.input_names,
+                                    keras_model.inputs)
+                inputs = [
+                    KL.Lambda(lambda s: input_slices[name][i],
+                              output_shape=lambda s: (None,) + s[1:])(tensor)
+                    for name, tensor in zipped_inputs]
+                # Create the model replica and get the outputs
+                outputs = keras_model(inputs)
+                if not isinstance(outputs, list):
+                    outputs = [outputs]
+                # Save the outputs for merging back together later
+                for l, o in enumerate(outputs):
+                    outputs_all[l].append(o)
+
+    # Merge outputs on CPU
+    with tf.device('/cpu:0'):
+        merged = []
+        for outputs, name in zip(outputs_all, output_names):
+            # Concatenate or average outputs?
+            # Outputs usually have a batch dimension and we concatenate
+            # across it. If they don't, then the output is likely a loss
+            # or a metric value that gets averaged across the batch.
+            # Keras expects losses and metrics to be scalars.
+            if K.int_shape(outputs[0]) == ():
+                # Average
+                m = KL.Lambda(lambda o: tf.add_n(
+                    o) / len(outputs), name=name)(outputs)
+            else:
+                # Concatenate
+                m = KL.Concatenate(axis=0, name=name)(outputs)
+            merged.append(m)
+    return merged
+
+
+class ParallelModel(KM.Model):
+    """Subclasses the standard Keras Model and adds multi-GPU support.
+    It works by creating a copy of the model on each GPU. Then it slices
+    the inputs and sends a slice to each copy of the model, and then
+    merges the outputs together and applies the loss on the combined
+    outputs.
+    """
+
+    def __init__(self, keras_model, gpu_count):
+        """Class constructor.
+        keras_model: The Keras model to parallelize
+        gpu_count: Number of GPUs. Must be > 1
+        """
+        merged_outputs = make_parallel(
+            keras_model=keras_model, gpu_count=gpu_count)
+        super(ParallelModel, self).__init__(inputs=keras_model.inputs,
+                                            outputs=merged_outputs)
+        self.inner_model = keras_model
+
+    def __getattribute__(self, attrname):
+        """Redirect loading and saving methods to the inner model. That's where
+        the weights are stored."""
+        if 'load' in attrname or 'save' in attrname:
+            return getattr(self.inner_model, attrname)
+        return super(ParallelModel, self).__getattribute__(attrname)
+
+    def summary(self, *args, **kwargs):
+        """Override summary() to display summaries of both, the wrapper
+        and inner models."""
+        super(ParallelModel, self).summary(*args, **kwargs)
+        self.inner_model.summary(*args, **kwargs)
+```
+
+
+
+c) 有多个GPU时
+
+```python
+        if config.GPU_COUNT > 1:
+            model = ParallelModel(model, config.GPU_COUNT)
+```
+
+
+
+d) 注意内部模型的batch_size是IMAGES_PER_GPU；训练模型喂入数据是batch_size是`IMAGES_PER_GPU*GPU_COUNT`
 
