@@ -21,6 +21,7 @@ def smooth_l1_loss(y_true, y_predict):
     loss = tf.where(tf.less(abs_diff, 1), 0.5 * tf.pow(abs_diff, 2), abs_diff - 0.5)
     return tf.reduce_mean(loss, axis=1)
 
+
 def softamx():
     y_true = tf.constant([[[0, 1, 0]]],
                          dtype=K.floatx())
@@ -55,6 +56,13 @@ def main():
     print(sess.run(loss_weighted))
 
 
+def test():
+    x = tf.ones(shape=[3, 5, 4])
+    y = tf.reduce_sum(x[..., ::2], axis=-1)
+    print(y)
+
+
 if __name__ == '__main__':
-    main()
-    #softamx()
+    # main()
+    # softamx()
+    test()
