@@ -199,3 +199,101 @@ def display_boxes(image, boxes, class_ids, class_names,
 ```
 
 画边框用`patches.Rectangle`; 增加标题用`ax.text`
+
+
+
+
+
+## 工程测试
+
+
+
+### ssds.pytorch
+
+
+
+```
+git clone https://github.com/ShuangXieIrene/ssds.pytorch
+```
+
+
+
+```
+python train.py --cfg=./experiments/cfgs/ssd_lite_mobilenetv2_train_voc.yml
+```
+
+
+
+遇到问题：错误太多了
+
+```python
+  File "/root/anaconda3/envs/pytorch/lib/python3.6/multiprocessing/connection.py", line 493, in Client
+    answer_challenge(c, authkey)
+  File "/root/anaconda3/envs/pytorch/lib/python3.6/multiprocessing/connection.py", line 737, in answer_challenge
+    response = connection.recv_bytes(256)        # reject large message
+  File "/root/anaconda3/envs/pytorch/lib/python3.6/multiprocessing/connection.py", line 216, in recv_bytes
+    buf = self._recv_bytes(maxlength)
+  File "/root/anaconda3/envs/pytorch/lib/python3.6/multiprocessing/connection.py", line 407, in _recv_bytes
+    buf = self._recv(4)
+  File "/root/anaconda3/envs/pytorch/lib/python3.6/multiprocessing/connection.py", line 379, in _recv
+    chunk = read(handle, remaining)
+ConnectionResetError: [Errno 104] Connection reset by peer
+```
+
+
+
+### mmdection
+
+```python
+python tools/train.py configs/retinanet_r50_fpn_1x.py
+```
+
+
+
+```
+  File "/home/github/mmdetection/mmdet/ops/dcn/functions/deform_conv.py", line 5, in <module>
+    from .. import deform_conv_cuda
+ImportError: cannot import name 'deform_conv_cuda'
+```
+
+
+
+
+
+### vision
+
+
+
+```shell
+cd /home/github/vision/references/detection
+export CUDA_VISIBLE_DEVICES=0
+python train.py --data-path /home/dataset/coco --model fasterrcnn_resnet50_fpn
+```
+
+
+
+```shell
+  File "/root/anaconda3/envs/pytorch/lib/python3.6/site-packages/torchvision/datasets/coco.py", line 112, in __getitem__
+
+    img = Image.open(os.path.join(self.root, path)).convert('RGB')
+  File "/root/anaconda3/envs/pytorch/lib/python3.6/site-packages/PIL/Image.py", line 2770, in open
+    fp = builtins.open(filename, "rb")
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dataset/coco/train2014/000000447187.jpg'
+```
+
+
+
+
+
+### PyTorch-YOLOv3
+
+
+
+```shell
+https://github.com/eriklindernoren/PyTorch-YOLOv3.git
+cd PyTorch-YOLOv3
+python train.py --data_config config/coco.data  --pretrained_weights weights/darknet53.conv.74
+```
+
+
+
