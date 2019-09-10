@@ -12,6 +12,8 @@ except ImportError:
 from PIL import Image
 import sys
 import collections
+import numpy as np
+import math
 
 if sys.version_info < (3, 3):
     Sequence = collections.Sequence
@@ -64,3 +66,36 @@ def resize(img, size, interpolation=Image.BILINEAR):
     else:
         ow, oh = size[::-1]
     return img.resize((ow, oh), interpolation), oh, ow
+
+
+def rotate_boxes(boxes, angle, center):
+    """
+    x1 = cos(theta)x0 - sin(theta)y0
+    y1 = sin(theta)x0 + cos(theta)y0
+    :param boxes:
+    :param angle:
+    :param center:
+    :return:
+    """
+    angle = angle * math.pi / 180
+    ctr_y, ctr_x = center
+    boxes[:, ::2] -= ctr_y
+    boxes[:, 1::2] -= ctr_x
+
+    y1, x1, y2, x2 = np.split(boxes, 4, axis=1)
+    p1 = np.concatenate([x1, y1], axis=1)
+    p2 = np.concatenate([x2, y2], axis=1)
+    # rotate
+    delta = np.array([[math.cos(angle), math.sin(angle)],
+                      [-math.sin(angle), math.cos(angle)]])
+
+    p1 = np.matmul(delta, p1.T).T
+    p2 = np.matmul(delta, p2.T).T
+    y1, y1 = np.split(p1, 2, axis=1)
+    x2, y2 = np.split(p2, 2, axis=1)
+    boxes = np.concatenate([y1, x1, y2, x2], axis=1)
+
+    #
+    boxes[:, ::2] += ctr_y
+    boxes[:, 1::2] += ctr_x
+    return boxes
