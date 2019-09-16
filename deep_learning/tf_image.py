@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 def test():
-    img = plt.imread('../../pics/1.jpg')
+    img = plt.imread('../../data/1.jpg')
     shape = img.shape
     img = img.reshape([1, shape[0], shape[1], shape[2]])
     a = tf.image.crop_and_resize(img, [[0.5, 0.5, 0.6, 0.2], [0.5, 0.5, 1.3, 0.9]],
