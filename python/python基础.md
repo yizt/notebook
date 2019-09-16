@@ -103,6 +103,22 @@ conda env create -f environment.yaml
 
 
 
+conda 离线迁移
+
+首先，需要scp或者下载的不只有envs目录下的已有环境文件夹，还有anaconda3/pkgs文件夹。
+
+然后，将下载下来的已有环境文件夹和pkgs文件夹上传到离线主机上；
+
+使用上传的pkgs文件夹替换原有的anaconda3/pkgs目录，或者将文件夹里的内容复制到离线主机原有的pkgs文件夹里面。
+
+再使用如下命令：
+
+```bash
+conda create -n [name] --clone [filepath] --offline
+```
+
+
+
 
 
 ## 基础编程
@@ -266,3 +282,26 @@ if __package__ is None:
 ### py2to3
 
 30/4
+
+
+
+## 问题处理
+
+a. Microsoft visual c++ 14.0 is required 
+
+​    下载地址：`https://pan.baidu.com/s/1WaBxFghTll6Zofz1DGOZBg`
+
+b. win10下安装cocoapi
+
+```
+git clone https://github.com/philferriere/cocoapi.git
+cd PythonAPI
+python setup.py install build_ext -inplace -p win-amd64
+```
+
+
+
+
+
+
+

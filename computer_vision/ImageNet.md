@@ -231,6 +231,8 @@ Test: Total time: 0:01:19
 
 ## 训练
 
+a) 单卡训练
+
 ```shell
 cd /home/github/vision/references/classification
 export CUDA_VISIBLE_DEVICES=1
@@ -241,5 +243,31 @@ nohup python train.py --model shufflenet_v2_x1_0 --data-path /tmp_train_data/ima
 
 ```python
 nohup python train.py --model shufflenet_v2_x1_0 --data-path /tmp_train_data/imagenet/ --batch-size 256 --args.resume &
+```
+
+
+
+b)多卡训练
+
+   修改train.py增加`parser.add_argument('--local_rank', type=int, default=0)`
+
+```bash
+python -m torch.distributed.launch --nproc_per_node 2 train.py --model shufflenet_v2_x1_0 --data-path /tmp_train_data/imagenet/
+```
+
+   日志如下：
+
+```bash
+(pytorch) [root@localhost classification]# python -m torch.distributed.launch --nproc_per_node 2 train.py --model shufflenet_v2_x1_0 --data-path /tmp_train_data/imagenet/
+| distributed init (rank 1): env://
+| distributed init (rank 0): env://
+Namespace(apex=False, apex_opt_level='O1', batch_size=32, cache_dataset=False, data_path='/tmp_train_data/imagenet/', device='cuda', dist_backend='nccl', dist_url='env://', distributed=True, epochs=90, gpu=0, local_rank=0, lr=0.1, lr_gamma=0.1, lr_step_size=30, model='shufflenet_v2_x1_0', momentum=0.9, output_dir='.', pretrained=False, print_freq=10, rank=0, resume='', start_epoch=0, sync_bn=False, test_only=False, weight_decay=0.0001, workers=16, world_size=2)
+Loading data
+Loading training data
+Took 2.669806718826294
+Loading validation data
+Creating data loaders
+Creating model
+Start training
 ```
 

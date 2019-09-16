@@ -12,8 +12,11 @@ from bokeh.io import output_notebook, show, push_notebook
 
 def cv_show(file_path):
     cap = cv2.VideoCapture(file_path)
-    while cap.isOpened():
-        ret, frame = cap.read()
+    flag = True
+    while flag and cap.isOpened():
+        flag, frame = cap.read()
+        if frame is None:
+            continue
         cv2.imshow('image', frame)
         k = cv2.waitKey(20)
         # q键退出
@@ -65,4 +68,5 @@ def test_camera_show():
 
 
 if __name__ == '__main__':
-    cv_show('./data/Abuse011_x264.mp4')
+    # cv_show('./data/Abuse011_x264.mp4')
+    cv_show(r'D:\pyspace\py_data_mining\anomaly-detection\tmp\predict-Abuse005_x264.mp4')

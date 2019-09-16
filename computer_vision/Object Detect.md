@@ -292,8 +292,22 @@ FileNotFoundError: [Errno 2] No such file or directory: '/home/dataset/coco/trai
 ```shell
 https://github.com/eriklindernoren/PyTorch-YOLOv3.git
 cd PyTorch-YOLOv3
+```
+
+
+
+训练
+
+```shell
+export CUDA_VISIBLE_DEVICES=1
 python train.py --data_config config/coco.data  --pretrained_weights weights/darknet53.conv.74
 ```
 
 
+
+预测
+
+```shell
+python detect.py --image_folder data/samples/ --weights_path checkpoints/yolov3_ckpt_3.pth --conf_thres 0.6
+```
 
