@@ -287,6 +287,31 @@ docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 
 
 
+## mac主机安装
+
+```shell
+wget https://download.docker.com/mac/stable/Docker.dmg
+```
+
+
+
+```shell
+yizt-mac:~ admin$ more ~/.docker/daemon.json
+{
+  "debug" : true,
+  "experimental" : false,
+  "insecure-registries" : [
+
+  ],
+  "registry-mirrors" : [
+    "http://aad0405c.m.daocloud.io"
+  ]
+}
+http://aad0405c.m.daocloud.io
+```
+
+
+
 
 
 ## 参考资料
