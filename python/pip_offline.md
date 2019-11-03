@@ -4,6 +4,7 @@
 
 ```
 https://pypi.doubanio.com/simple
+https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 
@@ -23,27 +24,5 @@ python setup.py install
 wget https://pypi.doubanio.com/packages/0c/ba/e521b9dfae78dc88d3e88be99c8d6f8737a69b65114c5e4979ca1209c99f/psycopg2-2.7.7-cp37-cp37m-manylinux1_x86_64.whl#md5=ac467b457304857e5cf33116f2d8cddd
 
 pip install psycopg2-2.7.7-cp37-cp37m-manylinux1_x86_64.whl
-```
-
-
-
-```sql
-CREATE TABLE tb_cmd_cfg (
-	seq float8 NOT NULL,
-	func_id varchar(40) NOT NULL,
-	cfg_key varchar(40) NULL,
-	memo varchar(100) NULL,
-	exec_cmd text NULL,
-	"enable" varchar(1) NULL,
-	PRIMARY KEY (seq, func_id)
-);
-
-
-CREATE TABLE tb_cmd_cfg (
-	seq float8 NOT NULL,
-	func_id varchar(40) NOT NULL,
-	cfg_key varchar(40) NULL,
-	PRIMARY KEY (seq, func_id)
-);
 ```
 
