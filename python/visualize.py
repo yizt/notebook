@@ -11,6 +11,7 @@ from matplotlib import patches, lines
 import random
 import numpy as np
 import colorsys
+import cv2
 
 
 def random_colors(N, bright=True):
@@ -24,6 +25,53 @@ def random_colors(N, bright=True):
     colors = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
     random.shuffle(colors)
     return colors
+
+
+def draw_boxes(image, boxes, scores, class_names=None, colors=None):
+    if len(boxes) == 0:
+        return
+    if colors is None:
+        colors = random_colors(len(boxes))
+    if class_names is None:
+        class_names = [] * len(boxes)
+
+    for box, score, class_name, color in zip(boxes.astype(np.int32), scores, class_names, colors):
+        y1, x1, y2, x2 = box
+        cv2.rectangle(image, (x1, y1), (x2, y2), color, thickness=4)
+
+        text_str = '{}:{:.0%}'.format(class_name, score)
+        cv2.putText(image, text_str, (x1, y1 - 8), cv2.FONT_HERSHEY_PLAIN, .75, color,
+                    thickness=1)
+
+
+def put_text(image, x, y, text, color=None):
+    """
+    写中文字
+    :param image:
+    :param x:
+    :param y:
+    :param text:
+    :param color:
+    :return:
+    """
+    from PIL import Image, ImageDraw, ImageFont
+    im = Image.fromarray(image)
+    font = ImageFont.truetype('/System/Library/Fonts/STHeiti Light.ttc')
+    draw = ImageDraw.Draw(im)
+    color = (255, 0, 0) if color is None else color
+    draw.text((x, y), text, color, font=font)
+    return np.array(im)
+
+
+def put_texts(image, xs, ys, texts, color=None):
+    from PIL import Image, ImageDraw, ImageFont
+    im = Image.fromarray(image)
+    font = ImageFont.truetype('/System/Library/Fonts/STHeiti Light.ttc')
+    draw = ImageDraw.Draw(im)
+    color = (255, 0, 0) if color is None else color
+    for x, y, text in zip(xs, ys, texts):
+        draw.text((x, y), text, color, font=font)
+    return np.array(im)
 
 
 # 边框可视化
