@@ -18,9 +18,9 @@ def main(model_path, image_path):
     net = cv2.dnn.readNet(model_path)
 
     image = cv2.imread(image_path)
-
+    # print(image.shape)
     detect_img = east_detect(net, image)
-
+    # print(detect_img.shape)
     # show the output image
     cv2.imshow("Text Detection", detect_img)
     cv2.waitKey(0)
@@ -119,7 +119,7 @@ def east_detect(net, image):
     # apply non-maxima suppression to suppress weak, overlapping bounding
     # boxes
     boxes = non_max_suppression(np.array(rects), probs=confidences)
-
+    print(type(boxes))
     # loop over the bounding boxes
     for (startX, startY, endX, endY) in boxes:
         # scale the bounding box coordinates based on the respective
@@ -135,7 +135,36 @@ def east_detect(net, image):
     return orig
 
 
+def video_detect(video_path, model_path, output_path):
+    print("[INFO] loading EAST text detector...")
+    net = cv2.dnn.readNet(model_path)
+
+    cap = cv2.VideoCapture(video_path)
+    h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    print(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    # fourcc = cv2.VideoWriter_fourcc("D", "I", "B", " ")
+    writer = cv2.VideoWriter()
+    writer.open(output_path, fourcc, fps, (w, h), True)
+    flag = True
+    while flag and cap.isOpened():
+        flag, frame = cap.read()
+        if frame is None:
+            continue
+        frame = east_detect(net, frame)
+        writer.write(frame)
+
+    cap.release()
+    writer.release()
+
+
 if __name__ == '__main__':
     im_path = '../../data/text/2.jpg'
     weight_path = '/Users/yizuotian/pretrained_model/frozen_east_text_detection.pb'
     main(weight_path, im_path)
+    # video_detect('/Users/yizuotian/zoomlion/zhongchuang/video.mp4',
+    #              weight_path,
+    #              '/Users/yizuotian/zoomlion/zhongchuang/detect_video.avi')
