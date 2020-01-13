@@ -60,6 +60,13 @@ def test():
     x = tf.ones(shape=[3, 5, 4])
     y = tf.reduce_sum(x[..., ::2], axis=-1)
     print(y)
+    y_true = tf.constant([[1, 0, 2, 1, 0, 0, 2]],
+                         dtype=tf.int32)
+    y_pred = tf.constant([[[-10, 1, -10], [0, 2, 0], [1, 3, 1], [-1, 1, -1], [-2, 0, -2], [-1, 3, -1], [0, -1, 0]]],
+                         dtype=K.floatx())
+    loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y_true, logits=y_pred)
+    sess = K.get_session()
+    print(sess.run(loss))
 
 
 if __name__ == '__main__':
