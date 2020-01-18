@@ -5,9 +5,11 @@
    Author :       mick.yi
    Date：          2019/6/19
 """
+import os
+
 import cv2
-from bokeh.plotting import figure
 from bokeh.io import output_notebook, show, push_notebook
+from bokeh.plotting import figure
 
 
 def cv_show(file_path):
@@ -22,6 +24,22 @@ def cv_show(file_path):
         # q键退出
         if k & 0xff == ord('q'):
             break
+    cap.release()
+    cv2.destroyAllWindows()
+
+
+def video2images(file_path, output_path):
+    cap = cv2.VideoCapture(file_path)
+    flag = True
+    i = 0
+    while flag and cap.isOpened():
+        flag, frame = cap.read()
+        if frame is None:
+            continue
+        image_path = os.path.join(output_path, '{:03d}.jpg'.format(i))
+        cv2.imwrite(frame, image_path)
+        i += 1
+
     cap.release()
     cv2.destroyAllWindows()
 
