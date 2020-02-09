@@ -1,0 +1,38 @@
+<annotation>
+  <folder>Annotation</folder>
+  <filename>abc.jpg</filename>
+  <source>
+    <database>Unknown</database>
+    <annotation>PASCAL VOC2007</annotation>
+  </source>
+  <size>
+    <width>400</width>
+    <height>880</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <object>
+    <name>a</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>-196.85266601695952</xmin>
+      <ymin>7.448027848777358</ymin>
+      <xmax>384.4146795057379</xmax>
+      <ymax>-34.171544464851515</ymax>
+    </bndbox>
+  </object>
+  <object>
+    <name>b</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>57.22364604972958</xmin>
+      <ymin>71.73492026601043</ymin>
+      <xmax>80.77829624176577</xmax>
+      <ymax>46.871006902049764</ymax>
+    </bndbox>
+  </object>
+</annotation>
