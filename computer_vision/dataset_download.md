@@ -15,6 +15,20 @@ http://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_devkit_t12.tar
 训练集类别id:https://gist.github.com/aaronpolhamus/964a4411c0906315deb9f4a3723aac57
 
 
+## 目标检测
+
+### MSCOCO
+
+下载地址：http://cocodataset.org/#download
+
+```shell
+wget -c -t 0 http://images.cocodataset.org/zips/train2017.zip
+http://images.cocodataset.org/zips/val2017.zip
+http://images.cocodataset.org/zips/test2017.zip
+http://images.cocodataset.org/annotations/annotations_trainval2017.zip
+http://images.cocodataset.org/annotations/image_info_test2017.zip
+```
+
 
 ## 人脸识别
 
