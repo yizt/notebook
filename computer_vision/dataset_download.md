@@ -27,6 +27,12 @@ http://images.cocodataset.org/zips/val2017.zip
 http://images.cocodataset.org/zips/test2017.zip
 http://images.cocodataset.org/annotations/annotations_trainval2017.zip
 http://images.cocodataset.org/annotations/image_info_test2017.zip
+
+
+wget -c -t 0 http://images.cocodataset.org/zips/val2014.zip
+wget -c -t 0 http://images.cocodataset.org/zips/test2014.zip
+wget -c -t 0 http://images.cocodataset.org/annotations/annotations_trainval2014.zip
+
 ```
 
 
