@@ -34,4 +34,3 @@ if __name__ == '__main__':
     cv2.imshow('svd_' + str(eigen_num), img_svd.astype(np.uint8))
     cv2.waitKey(0)
 
-    np.
