@@ -269,6 +269,14 @@ https://arxiv.org/pdf/1906.09756v1.pdf
 
  
 
+### CornerNet 
+
+
+
+### ExtremeNet 
+
+
+
 ### FCOS
 
 https://arxiv.org/pdf/1904.01355.pdf
@@ -289,7 +297,38 @@ d) 大量的anchor边框iou计算耗时且占用内存
 
 1. 对于重叠的GT 边框，像素到底预测哪一个GT box;FPN可以缓解这个问题(对于歧义的像素，关联面积小的GT box)。
 2. center-ness 预测像素偏离中心的程度，该分支可以过滤低质量的检测边框
-3. 
+3. fcos可以利用尽可能多的前景样本，不像基于anchor的检测器，只利用IoU较高的样本
+
+
+
+
+
+### CenterNet: Objects as Points 
+
+https://arxiv.org/pdf/1904.07850.pdf
+
+关键词: anchor-free,没有分组,没有后处理(如NMS);
+
+对应目标检测keypiont就是GT 边框中心点
+
+建模过程
+
+1. Keypoint: 计算GT边框的k的Keypoint在步长R为预测FeatureMap(H/R,W/R,C)上的坐标(x,y)，将通道维Ck通道(x,y)赋值为1，然后使用高斯核函数均匀化；使用FocalLoss回归
+2. Keypoint坐标偏移: 使用L1 loss计算由于步长R带来的坐标偏移
+3. Keypoint尺寸预测：使用L1 loss计算Keypoint尺寸
+
+预测过程
+
+1. 通过Keypoint预测结果找到最大的n个峰值，所谓峰值就是不小于领域所有值
+2. 将峰值坐标偏移，再根据尺寸即可得到边框坐标
+
+
+
+### CenterNet: Keypoint Triplets for Object Detection
+
+https://arxiv.org/pdf/1904.08189.pdf
+
+
 
 
 
@@ -607,6 +646,14 @@ https://arxiv.org/pdf/1909.13226.pdf
 
 
 
+Smooth L1忽略的距离的关系；
+
+IoU loss计算复杂，无法并行
+
+
+
+
+
 ### SOLO
 
 https://arxiv.org/pdf/1912.04488.pdf
@@ -619,7 +666,7 @@ https://arxiv.org/pdf/1911.06667.pdf
 
 https://github.com/youngwanLEE/CenterMask
 
-基于FCO+VovNet,增加SAM做mask;  SAM参考CBAM；
+基于FCOS+VovNet,增加SAM做mask;  SAM参考CBAM；
 
 传统的RoiAlign没有考虑Roi尺寸
 
