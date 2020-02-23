@@ -269,7 +269,9 @@ https://arxiv.org/pdf/1906.09756v1.pdf
 
  
 
-### CornerNet 
+### CornerNet: Detecting Objects as Paired Keypoints 
+
+https://arxiv.org/pdf/1808.01244.pdf
 
 
 
@@ -329,6 +331,10 @@ https://arxiv.org/pdf/1904.07850.pdf
 https://arxiv.org/pdf/1904.08189.pdf
 
 
+
+CornerNet受限于较弱的全局信息能力(对关键点检测敏感，对哪些关键点应该是一对不敏感)；
+
+CenterNet增加一个关键点感知region的中心；同时增加两个策略center pooling,cascade corner pooling
 
 
 
@@ -767,6 +773,38 @@ Side-Refinement: 水平距离小于50像素(垂直IoU>0.7)的proposals连起来;
 ### 总结
 
 https://blog.csdn.net/xwukefr2tnh4/article/details/80589198
+
+
+
+## 模型解释
+
+### CAM Learning Deep Features for Discriminative Localization
+
+https://arxiv.org/pdf/1512.04150.pdf
+
+1.本文重新审视全局平均池化(GAP)，阐明了GAP赋能卷积神经网络可观的定位能力，尽管网络是在图像级别的标注上训练的；
+
+2.卷积网络的神经元实际上充当目标检测器的角色；但是分类网络中的全连接层使得网络丧失的空间定位能力
+
+3.简单改变一下分类网络,使用GAP替换FC层，即可使得分类网络有弱监督定位能力。
+
+
+
+### Grad-CAM:  Visual Explanations from Deep Networks via Gradient-based Localization 
+
+https://arxiv.org/pdf/1610.02391.pdf
+
+1.本文提出的方法Gradient-weighted Class Activation Mapping (Grad-CAM)通过对任意目标类别梯度反传到最后一个卷积层；在图像中突出对预测类别重要的区域；
+
+2.相对于CAM适用更多网络(image classification、image captioning、VQA)；同时也不需要更改网络结构；
+
+3.通过Grad-CAM可以轻松分别哪个网络更强哪个网络更弱。
+
+
+
+### Grad-CAM++: Improved Visual Explanations for Deep Convolutional Networks
+
+https://arxiv.org/pdf/1710.11063.pdf
 
 
 
