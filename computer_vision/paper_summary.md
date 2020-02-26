@@ -518,6 +518,8 @@ c)更深的网络和多尺寸处理
 
 
 
+
+
 ### MNC Instance-aware semantic segmentation via Multi-task Network Cascades
 
 https://arxiv.org/pdf/1512.04412.pdf
@@ -558,17 +560,75 @@ position-sensitive score maps 可以实现平移变化
 
 
 
-### MS R-CNN
+### ParseNet
 
-Mask Scoring R-CNN 
+### Segnet
 
-https://arxiv.org/pdf/1903.00241.pdf
-
-实例分割中使用分类的分数作为mask的质量得分；mask的得分由IoU量化
-
-smask = scls · siou 
+### U-Net
 
 
+
+### PSPNet
+
+### ExFuse: Enhancing Feature Fusion for Semantic Segmentation
+
+### RefineNet: Multi-Path Refinement Networks for High-Resolution Semantic Segmentation
+
+
+
+## 实时语义分割
+
+### HarDNet: A Low Memory Traffic Network
+
+https://arxiv.org/pdf/1909.00948.pdf
+
+
+
+
+
+
+
+### ShelfNet for Fast Semantic Segmentation
+
+https://arxiv.org/pdf/1811.11254.pdf
+
+
+
+
+
+### Fast-SCNN
+
+https://arxiv.org/pdf/1902.04502.pdf
+
+
+
+### CAS
+
+### DF1-Seg-d8
+
+
+
+### FasterSeg: Searching for Faster Real-time Semantic Segmentation
+
+https://arxiv.org/pdf/1912.10917.pdf
+
+NAS
+
+ “zoomed conv.”: bilinear downsampling + 3×3 conv. + bilinear upsampling
+
+“zoomed conv. ×2”: bilinear downsampling + 3×3 conv. ×2 + bilinear upsampling
+
+知识蒸馏
+
+
+
+### BiSeNet: Bilateral Segmentation Network for Real-time Semantic Segmentation
+
+https://arxiv.org/pdf/1808.00897.pdf
+
+
+
+### LEDNet: A Lightweight Encoder-Decoder Network for Real-Time Semantic Segmentation
 
 
 
@@ -642,7 +702,15 @@ mask基于单个视野预测丢弃的多样性信息，增加一个FC来辅助FC
 
 
 
+### MS R-CNN
 
+Mask Scoring R-CNN 
+
+https://arxiv.org/pdf/1903.00241.pdf
+
+实例分割中使用分类的分数作为mask的质量得分；mask的得分由IoU量化
+
+smask = scls · siou 
 
 
 
@@ -805,6 +873,28 @@ https://arxiv.org/pdf/1610.02391.pdf
 ### Grad-CAM++: Improved Visual Explanations for Deep Convolutional Networks
 
 https://arxiv.org/pdf/1710.11063.pdf
+
+
+
+## 模型压缩、量化
+
+### Extremely Low Bit Neural Network: Squeeze the Last Bit Out with ADMM
+
+https://arxiv.org/pdf/1707.09870.pdf
+
+mixed integer programs 
+
+extragradient 
+
+ADMM 
+
+BWN 
+
+These results suggest that we should quantize different parts of the networks with different bit width in practice 
+
+
+
+
 
 
 
