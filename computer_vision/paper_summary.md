@@ -564,6 +564,8 @@ position-sensitive score maps 可以实现平移变化
 
 ### Segnet
 
+https://arxiv.org/pdf/1511.00561.pdf
+
 ### U-Net
 
 
@@ -584,7 +586,9 @@ https://arxiv.org/pdf/1909.00948.pdf
 
 
 
+### ESPNet: Efficient Spatial Pyramid of Dilated Convolutions for Semantic Segmentation
 
+https://arxiv.org/pdf/1803.06815.pdf
 
 
 
@@ -600,7 +604,15 @@ https://arxiv.org/pdf/1811.11254.pdf
 
 https://arxiv.org/pdf/1902.04502.pdf
 
+大感受野，空间细节
 
+Encoder-decoder、多分支
+
+ICNet [36], ContextNet [21], BiSeNet [34] and GUN [17]
+
+
+
+DSConv + Inverted ResBlock + PPM 
 
 ### CAS
 
@@ -629,6 +641,10 @@ https://arxiv.org/pdf/1808.00897.pdf
 
 
 ### LEDNet: A Lightweight Encoder-Decoder Network for Real-Time Semantic Segmentation
+
+https://arxiv.org/pdf/1905.02423.pdf
+
+
 
 
 
