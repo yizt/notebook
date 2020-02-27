@@ -570,11 +570,47 @@ https://arxiv.org/pdf/1511.00561.pdf
 
 
 
+
+
+
+
+### RefineNet: Multi-Path Refinement Networks for High-Resolution Semantic Segmentation
+
+https://arxiv.org/pdf/1611.06612.pdf
+
+
+
+
+
 ### PSPNet
+
+
+
+
 
 ### ExFuse: Enhancing Feature Fusion for Semantic Segmentation
 
-### RefineNet: Multi-Path Refinement Networks for High-Resolution Semantic Segmentation
+<https://arxiv.org/pdf/1804.03821.pdf>
+
+
+
+
+
+
+
+
+
+
+
+### Object-Contextual Representations for Semantic Segmentation
+
+<https://arxiv.org/pdf/1909.11065.pdf>
+
+
+
+
+
+
 
 
 
