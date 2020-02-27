@@ -40,6 +40,23 @@ python demo/demo.py --config-file configs/PascalVOC-Detection/faster_rcnn_R_50_C
 ```
 
 
+torch.jit.trace
+    报错不支持
+```shell
+:Could not infer type of list element: Only tensors and (possibly nested) tuples of tensors, lists, or dictsare supported as inputs or outputs of traced functions, but instead got value of type Instances. (toTypeInferredIValue at ../torch/csrc/jit/pybind_utils.h:293)
+frame #0: c10::Error::Error(c10::SourceLocation, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) + 135 (0x12af4e787 in libc10.dylib)
+frame #1: torch::jit::toTypeInferredIValue(pybind11::handle) + 540 (0x11d215a4c in libtorch_python.dylib)
+frame #2: std::__1::__function::__func<torch::jit::tracer::createGraphByTracing(pybind11::function const&, std::__1::vector<c10::IValue, std::__1::allocator<c10::IValue> >, pybind11::function const&, bool, torch::jit::script::Module*)::$_0, std::__1::allocator<torch::jit::tracer::createGraphByTracing(pybind11::function const&, std::__1::vector<c10::IValue, std::__1::allocator<c10::IValue> >, pybind11::function const&, bool, torch::jit::script::Module*)::$_0>, std::__1::vector<c10::IValue, std::__1::allocator<c10::IValue> > (std::__1::vector<c10::IValue, std::__1::allocator<c10::IValue> >)>::operator()(std::__1::vector<c10::IValue, std::__1::allocator<c10::IValue> >&&) + 436 (0x11d2c4874 in libtorch_python.dylib)
+frame #3: torch::jit::tracer::trace(std::__1::vector<c10::IValue, std::__1::allocator<c10::IValue> >, std::__1::function<std::__1::vector<c10::IValue, std::__1::allocator<c10::IValue> > (std::__1::vector<c10::IValue, std::__1::allocator<c10::IValue> >)> const&, std::__1::function<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > (at::Tensor const&)>, bool, torch::jit::script::Module*) + 1717 (0x120d85e55 in libtorch.dylib)
+frame #4: torch::jit::tracer::createGraphByTracing(pybind11::function const&, std::__1::vector<c10::IValue, std::__1::allocator<c10::IValue> >, pybind11::function const&, bool, torch::jit::script::Module*) + 361 (0x11d2c1719 in libtorch_python.dylib)
+frame #5: void pybind11::cpp_function::initialize<torch::jit::script::initJitScriptBindings(_object*)::$_13, void, torch::jit::script::Module&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, pybind11::function, pybind11::tuple, pybind11::function, bool, pybind11::name, pybind11::is_method, pybind11::sibling>(torch::jit::script::initJitScriptBindings(_object*)::$_13&&, void (*)(torch::jit::script::Module&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, pybind11::function, pybind11::tuple, pybind11::function, bool), pybind11::name const&, pybind11::is_method const&, pybind11::sibling const&)::'lambda'(pybind11::detail::function_call&)::__invoke(pybind11::detail::function_call&) + 319 (0x11d302a1f in libtorch_python.dylib)
+frame #6: pybind11::cpp_function::dispatcher(_object*, _object*, _object*) + 3324 (0x11cc3678c in libtorch_python.dylib)
+<omitting python frames>
+frame #27: start + 1 (0x7fff5affa015 in libdyld.dylib)
+frame #28: 0x0 + 11 (0xb in ???)
+
+```
+
 ## ubuntu下测试
 
 ```shell
