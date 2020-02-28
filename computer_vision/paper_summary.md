@@ -500,6 +500,12 @@ c)更深的网络和多尺寸处理
 
 
 
+### Deeplab V3+
+
+<https://arxiv.org/pdf/1802.02611.pdf>
+
+
+
 
 
 ### 总结
@@ -560,11 +566,33 @@ position-sensitive score maps 可以实现平移变化
 
 
 
-### ParseNet
+### FCN Fully Convolutional Networks for Semantic Segmentation
+
+<https://arxiv.org/pdf/1411.4038.pdf>
+
+
+
+### ParseNet: Looking Wider to See Better
+
+ <https://arxiv.org/pdf/1506.04579.pdf>
+
+
 
 ### Segnet
 
 https://arxiv.org/pdf/1511.00561.pdf
+
+encoder-decoder结构、non-linear upsampling 
+
+non-linear upsampling: 提升边框刻画能力，减少参数，移植到其它encoder-decoder网络中
+
+FCN encoder参数过多，decoder参数过少，训练困难；预测耗时
+
+使用CRF是因为编码器不够好
+
+Therefore, it is necessary to capture and store boundary information in the encoder feature maps before sub-sampling is performed 
+
+
 
 ### U-Net
 
@@ -625,6 +653,16 @@ https://arxiv.org/pdf/1909.00948.pdf
 ### ESPNet: Efficient Spatial Pyramid of Dilated Convolutions for Semantic Segmentation
 
 https://arxiv.org/pdf/1803.06815.pdf
+
+
+
+### ESNet: An Efficient Symmetric Network for Real-time Semantic Segmentation
+
+<https://arxiv.org/pdf/1906.09826.pdf>
+
+
+
+
 
 
 
