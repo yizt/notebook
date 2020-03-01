@@ -352,6 +352,12 @@ RefineNet、PSPNet
 
 ### DeepLab v1
 
+<https://arxiv.org/pdf/1412.7062v3.pdf>
+
+
+
+
+
 #### 摘要
 
 ​        三个贡献: 
@@ -498,6 +504,14 @@ c)更深的网络和多尺寸处理
 
 ### Deeplab V2
 
+<https://arxiv.org/pdf/1606.00915.pdf>
+
+
+
+### DeeplabV3
+
+<https://arxiv.org/pdf/1706.05587.pdf>
+
 
 
 ### Deeplab V3+
@@ -570,11 +584,64 @@ position-sensitive score maps 可以实现平移变化
 
 <https://arxiv.org/pdf/1411.4038.pdf>
 
+FC网络可以看做卷积网络的一种；
 
+227 × 227 耗时1.2ms产生一个点输出;500 × 500耗时22ms,产生10 × 10网格输出；对应的反向传播2.4 ms和37ms；
+
+分类网络产生的分割结果是粗糙的
+
+Sampling in patchwise training can correct class imbalance [27, 8, 2] and mitigate the spatial correlation of dense patches [28, 16].
+
+Whole image fully convolutional training is identical to patchwise training where each batch consists of all the receptive fields of the units below the loss for an image (or collection of images).
+
+If the kept patches still have significant overlap, fully convolutional computation will still speed up training.
+
+
+
+
+
+### Learning deconvolution network for semantic segmentation 
+
+<https://arxiv.org/pdf/1505.04366>
+
+
+
+fixed-size receptive field ,大对象分类不一致，小对象误分类或漏标
+
+
+
+- a multi-layer deconvolution network 
+- The trained network is applied to individual object proposals to obtain instance-wise segmentations 
+
+### 
+
+deconvolution 是形状生成器
+
+unpooling 捕获example-specific 结构，跟踪原始定位；
+
+deconvolutional 捕获class-specific 形状
+
+Instance-wise segmentation 可以处理不同的尺寸
+
+
+
+训练细节
+
+BN
+
+两阶段训练：参数多，样本少； we employ a two-stage training method to address this issue, where we train the network with easy examples first and fine-tune the trained network with more challenging examples later ；
+
+容易样本，crop GT; 困难样本使用proposals 
+
+预测：top50 proposal 以max方式融合
+
+FCN擅长整体形状，DeconvNet 擅长细节
 
 ### ParseNet: Looking Wider to See Better
 
  <https://arxiv.org/pdf/1506.04579.pdf>
+
+
 
 
 
@@ -588,7 +655,7 @@ non-linear upsampling: 提升边框刻画能力，减少参数，移植到其它
 
 FCN encoder参数过多，decoder参数过少，训练困难；预测耗时
 
-使用CRF是因为编码器不够好
+使用CRF是因为解码器不够好
 
 Therefore, it is necessary to capture and store boundary information in the encoder feature maps before sub-sampling is performed 
 
