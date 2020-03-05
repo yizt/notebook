@@ -502,9 +502,11 @@ c)更深的网络和多尺寸处理
 
 
 
-### Deeplab V2
+### DeeplabV2
 
 <https://arxiv.org/pdf/1606.00915.pdf>
+
+语义分割面临的三大问题：a)分辨率降低；b)多尺寸；c) 	平移不变带来的定位精度降低
 
 
 
@@ -514,7 +516,7 @@ c)更深的网络和多尺寸处理
 
 
 
-### Deeplab V3+
+### DeeplabV3+
 
 <https://arxiv.org/pdf/1802.02611.pdf>
 
