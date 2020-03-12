@@ -16,9 +16,25 @@
 
 
 
+欧氏距离会生成模糊照片，；
+
+仅仅指定high-level的目标（与真实照片不可分辨）
+
+U-Net结构的生成器
+
+cGAN:  G : {x,z} → y 
+
+
+
+PatchGAN判别器：This discriminator tries to classify if each N × N patch in an im- age is real or fake.  
+
+
+
 ### CycleGAN:Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks
 
 <https://arxiv.org/pdf/1703.10593.pdf>
+
+使用未成对的图像，从源领域映射到目标领域G : X → Y ；同时学习一个反转的映射F : Y → X  ；并保证F(G(X)) ≈ X 
 
 
 
@@ -31,6 +47,18 @@
 ### StyleGAN:A Style-Based Generator Architecture for Generative Adversarial Networks
 
 <https://arxiv.org/pdf/1812.04948.pdf>
+
+
+
+### BigGAN:Large Scale GAN Training for High Fidelity Natural Image Synthesis
+
+<https://arxiv.org/pdf/1809.11096.pdf>
+
+
+
+### VQ-VAE 
+
+https://arxiv.org/pdf/1906.00446.pdf
 
 
 
