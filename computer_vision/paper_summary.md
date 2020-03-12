@@ -649,6 +649,19 @@ If the kept patches still have significant overlap, fully convolutional computat
 
 
 
+1. FCN由于固定的感受野，对应于大大超出感受野或者远小于感受野的物体分割不好；或分割不完整或误标记.
+2. 由于下采样,对象的精细结构在最终label map上丢失或者平滑，而且双线性插值上采样的过程太过简单；最近的网络使用CRF
+
+解决方法：
+
+1. 由反卷积、上池化和ReLU组成多层反卷积网络
+2. 对每个实例proposal单独分割，然后融合成整个图像的分割
+3. 
+
+
+
+
+
 fixed-size receptive field ,大对象分类不一致，小对象误分类或漏标
 
 
@@ -680,6 +693,12 @@ BN
 
 FCN擅长整体形状，DeconvNet 擅长细节
 
+
+
+
+
+
+
 ### ParseNet: Looking Wider to See Better
 
  <https://arxiv.org/pdf/1506.04579.pdf>
@@ -696,15 +715,32 @@ encoder-decoder结构、non-linear upsampling
 
 non-linear upsampling: 提升边框刻画能力，减少参数，移植到其它encoder-decoder网络中
 
-FCN encoder参数过多，decoder参数过少，训练困难；预测耗时
+FCN encoder参数过多，decoder参数过少，训练困难；预测耗时；同时因为encoder的feature map需要重用，导致预测时内存占用高；
+
+
 
 使用CRF是因为解码器不够好
 
 Therefore, it is necessary to capture and store boundary information in the encoder feature maps before sub-sampling is performed 
 
+改进点
+
+1. 去掉了VGG的FC层，大大降低参数量
+2. 在encoder中捕获和存储边界信息
 
 
-### U-Net
+
+### U-Net: Convolutional Networks for Biomedical Image Segmentation
+
+ <https://arxiv.org/pdf/1505.04597.pdf>
+
+训练深度神经网络通常需要数千张标注图像，我们通过数据增强提升标注图像的使用效率，使用少量标注图像即可训练一个深度网络
+
+通过灵活的形变做数据增广
+
+
+
+
 
 
 
@@ -1091,6 +1127,28 @@ ADMM
 BWN 
 
 These results suggest that we should quantize different parts of the networks with different bit width in practice 
+
+
+
+
+
+## 边缘检测
+
+### HED Holistically-Nested Edge Detection
+
+<https://arxiv.org/pdf/1504.06375.pdf>
+
+速度太慢：e.g., 0.4 seconds using GPU and 12 seconds using CPU
+
+
+
+### STEAL Devil is in the Edges: Learning Semantic Boundaries from Noisy Annotations
+
+<https://arxiv.org/pdf/1904.07934.pdf>
+
+### 
+
+### 
 
 
 
