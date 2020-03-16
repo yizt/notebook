@@ -786,7 +786,7 @@ DeepLab的空洞卷积计算量大；内存/显存占用高；空洞卷积的稀
 
 
 
-a) RefineNet采用短距离和长距离残差连接，可以高效的e2e训练；b) 链式池化获取全局上下文信息
+a)通过递归方式将高层语义信息融合到低层feature map生成高分辨率的feature map  b)采用短距离和长距离残差连接，可以高效的e2e训练；b) 链式池化获取全局上下文信息
 
 
 
@@ -834,6 +834,21 @@ a) RefineNet采用短距离和长距离残差连接，可以高效的e2e训练�
 
 
 
+### DANet:Dual attention network for scene segmentation
+
+<https://arxiv.org/pdf/1809.02983.pdf>
+
+需要考虑易混淆的类别，如：田野、草地；
+
+上下文融合不能以全局视角利用对象之间的关系
+
+提出一个双注意力网络，使用自注意力机制捕获空间和通道的依赖关系；
+
+1. 依据特征相似度计算权重，两个相似的特征可以互相提升，不管他们距离多远；可以防止不显眼的物体被支配物体影响
+2. 需要不同尺寸的上下文信息；不同尺寸的特征需要同等对待
+
+
+
 ### ExFuse: Enhancing Feature Fusion for Semantic Segmentation
 
 <https://arxiv.org/pdf/1804.03821.pdf>
@@ -853,7 +868,19 @@ a) RefineNet采用短距离和长距离残差连接，可以高效的e2e训练�
 
 <https://arxiv.org/pdf/1909.11065.pdf>
 
+探索像素点和它的上下文关系；像素的类别是像素所属对象的类别；通过对象区域的类别表征来增强像素的表征
 
+
+
+1. 将上下文分割为soft object regions ，每个region关联一个类别；
+2. 集成region中像素表征来估计regions的表征
+3. 通过对象上下文表征来增强像素的表征
+
+
+
+OCR 区分对象类别，ASPP 值区分空间位置；之前的上下文关系是像素之间的关系，OCR是像素与对象区域的关系；
+
+使用coarse segmentation map 来生成上下文表征
 
 
 
