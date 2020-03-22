@@ -1252,7 +1252,11 @@ These results suggest that we should quantize different parts of the networks wi
 
 
 
+## 表格提取
 
+### GFTE: Graph-based Financial Table Extraction
+
+<https://arxiv.org/pdf/2003.07560.pdf>
 
 
 
