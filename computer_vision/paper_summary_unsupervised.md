@@ -30,17 +30,27 @@ NCE:<http://www.jmlr.org/proceedings/papers/v9/gutmann10a/gutmann10a.pdf>
 
 <https://arxiv.org/pdf/1807.06653.pdf>
 
+互信息、最大化互信息
+
+clustering degeneracy、noisy data 
+
+协同聚类与互信息
 
 
-### Momentum contrast for unsupervised visual representation learning 
+
+### MoCo:Momentum contrast for unsupervised visual representation learning 
 
 <https://arxiv.org/pdf/1911.05722.pdf>
+
+非监督任务有两方面：pretext tasks 和loss functions 
+
+we take two random “views” of the same image under random data augmentation to form a positive pair.  
 
 
 
 ### A simple framework for contrastive learning of visual representations 
 
-### <https://arxiv.org/pdf/2002.05709.pdf>
+<https://arxiv.org/pdf/2002.05709.pdf>
 
 
 
