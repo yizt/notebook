@@ -48,12 +48,32 @@ we take two random “views” of the same image under random data augmentation 
 
 
 
-### A simple framework for contrastive learning of visual representations 
+1、大数据集，除了query图像和他的同源图像（augmentation）之外，其他的图像都是负样本。利用大量负样本字典，去学习一个pretext task。
+
+2、字典要足够大，但是受限于字典，minibatch无法足够大，所以构建queue把二者解耦。
+
+3、为了能让queue的key真实反映当前的encoder，要保证足够的连续性。所以要动量更新encoder。
+
+  
+
+ 
+
+
+
+### SimCLR: A simple framework for contrastive learning of visual representations
 
 <https://arxiv.org/pdf/2002.05709.pdf>
+
+1. 组合数据增广
+2. 在表征和对比损失之间加入非线性变换
+3. 大的Batch-Size
 
 
 
 ### MoCo V2:Improved Baselines with Momentum Contrastive Learning
 
 <https://arxiv.org/pdf/2003.04297.pdf>
+
+验证了SimCLR设计的有效性；将更多数据增广和非线性变换引入MoCo中，形成v2版本；
+
+对比损失关键在于keys怎么维持；SimCLR放在Batch中，MoCo则放在队列中。
