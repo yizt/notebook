@@ -1228,15 +1228,31 @@ b) the instance-level shift, such as object appearance, size
 
 
 
+### SCL: Towards Accurate Domain Adaptive Object Detection via Gradient Detach Based Stacked Complementary Losses
+
+<https://arxiv.org/pdf/1911.02559v3.pdf>
+
+
+
+
+
+### Unsupervised Domain Adaptation for Object Detection via Cross-Domain Semi-Supervised Learning
+
 <https://arxiv.org/pdf/1911.07158.pdf>
 
 
+
+
+
+### Self-Guided Adaptation: Progressive Representation Alignment for Domain Adaptive Object Detection
 
 <https://arxiv.org/pdf/2003.08777.pdf>
 
 
 
 
+
+### Cross-domain Object Detection through Coarse-to-Fine Feature Adaptation
 
 <https://arxiv.org/pdf/2003.10275.pdf>
 
