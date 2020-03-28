@@ -1212,6 +1212,36 @@ https://arxiv.org/pdf/1710.11063.pdf
 
 
 
+
+
+## 域适应
+
+### Domain Adaptive Faster R-CNN for Object Detection in the Wild
+
+<https://arxiv.org/pdf/1803.03243>
+
+测试与训练分布不一致有两方面：
+
+a) the image-level shift, such as image style, illumination, 
+
+b) the instance-level shift, such as object appearance, size
+
+
+
+<https://arxiv.org/pdf/1911.07158.pdf>
+
+
+
+<https://arxiv.org/pdf/2003.08777.pdf>
+
+
+
+
+
+<https://arxiv.org/pdf/2003.10275.pdf>
+
+
+
 ## 模型压缩、量化
 
 ### Extremely Low Bit Neural Network: Squeeze the Last Bit Out with ADMM
