@@ -1258,6 +1258,32 @@ b) the instance-level shift, such as object appearance, size
 
 
 
+### WebSOD
+
+<https://arxiv.org/pdf/2003.09790.pdf>
+
+
+
+Base class from target domain with bounding box annotations
+
+Novel class from target domain and web with image-level annotations
+
+
+
+Object Detector as Object Region Estimator: 在base class上训练，用于检测可能对象
+
+Attentive Classification Loss：网络图像一般单个对象，直接将图像类别赋予边框，来训练faster r-cnn; 使用cam来过滤类别预测错误的边框
+
+Residual Feature Refinement：固定所有层，增加RFR 块，精调target domain和web domain图像。
+
+
+
+总结：整体比较复杂，分三个阶段训练，且网络结构有差异
+
+
+
+
+
 ## 模型压缩、量化
 
 ### Extremely Low Bit Neural Network: Squeeze the Last Bit Out with ADMM
