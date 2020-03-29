@@ -1284,6 +1284,32 @@ Residual Feature Refinement：固定所有层，增加RFR 块，精调target dom
 
 
 
+## Few Shot Learning-小样本学习
+
+### Few-shot Object Detection via Feature Reweighting
+
+<https://arxiv.org/pdf/1812.01866.pdf>
+
+meta feature learner：元特征学习器
+
+feature reweighting module：特征重新加权模块；类似通道基本的注意力机制；只在支持图像上训练；输入图像增加mask通道，指示对象区域，多个对象只使用一个
+
+​          This is achieved by setting the reweighting vector for a target class to the average one predicted by the model after taking the k-shot samples as input. 
+
+​          ,we include an additional “mask” channel (Mi) that has only binary values: on the position within the bounding box of an object of interest, the value is 1, otherwise it is 0 (see left-bottom of Fig. 2). If multiple target objects are present on the image, only one object is used
+
+
+
+base classes：有大量标注样本
+
+novel classes: 少量标注样本
+
+首先学习base classes；然后在novel classes上精调；
+
+一个问题，reweighting 模块没有显示学习？
+
+
+
 ## 模型压缩、量化
 
 ### Extremely Low Bit Neural Network: Squeeze the Last Bit Out with ADMM
