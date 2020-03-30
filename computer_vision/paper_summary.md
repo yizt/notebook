@@ -1232,6 +1232,24 @@ b) the instance-level shift, such as object appearance, size
 
 <https://arxiv.org/pdf/1911.02559v3.pdf>
 
+一般两种方法处理域偏移：a) 在在源域训练,在目标域fine tune;b) 无监督跨域表征
+
+无监督有两个挑战：a) source and target domain data should be embedded into a common space  b) 特征对齐
+
+
+
+与COL的的关系：不是交替更新，是同时更新；
+
+Stacked Complementary Losses (SCL) ：辅助损失混合不同域，为检测的域分类器
+
+
+
+引用：
+
+Complement objective training：<https://arxiv.org/pdf/1903.01182v1.pdf>
+
+
+
 
 
 
@@ -1285,6 +1303,32 @@ Residual Feature Refinement：固定所有层，增加RFR 块，精调target dom
 
 
 ## Few Shot Learning-小样本学习
+
+### LSTD: A Low-Shot Transfer Detector for Object Detection
+
+<https://arxiv.org/pdf/1803.01529.pdf>
+
+当目标域样本很少时，迁移学习有三个挑战
+
+1. 普通的迁移策略不合适，无法消除检测与分类的差异
+2. 检测器相对分类更容易过拟合
+3. 简单fine tune忽略来自源域和目标域的对象知识，降低可迁移性
+
+
+
+创新点：
+
+1：组合SSD和Faster R-CNN；SSD做类别无关的边框回归；Faster R-CNN做coarse-to-fine的分类
+
+2：精调时使用背景抑制正则化，减少复杂背景干扰
+
+3：精调时最后的分类使用源域到目标域的知识蒸馏
+
+
+
+第一个小样本迁移学习解决方案；三个创新点都聚焦于减低过拟合。
+
+
 
 ### Few-shot Object Detection via Feature Reweighting
 
