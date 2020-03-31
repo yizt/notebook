@@ -1354,6 +1354,22 @@ novel classes: 少量标注样本
 
 
 
+### Frustratingly Simple Few-Shot Object Detection
+
+<https://arxiv.org/abs/2003.06957.pdf>
+
+在base classes上训练；在平衡的base classes和novel classes上精调最后几层；精调时采用实例级特征标准化(余弦相似性)
+
+简单的难以置信
+
+
+
+### Context-Transformer: Tackling Object Confusion for Few-Shot Detection
+
+<https://arxiv.org/pdf/2003.07304v1.pdf>
+
+
+
 ## 模型压缩、量化
 
 ### Extremely Low Bit Neural Network: Squeeze the Last Bit Out with ADMM
