@@ -1368,6 +1368,16 @@ novel classes: 少量标注样本
 
 <https://arxiv.org/pdf/2003.07304v1.pdf>
 
+小样本迁移学习通常定位好，但分类困难；定位是类别无关的；
+
+通过环境信息可以帮助辨别类别；Context-Transformer 包括两部分：affinity discovery 和context aggregation 
+
+
+
+affinity discovery：先验框和环境亲和度
+
+context aggregation : 亲和度矩阵与环境向量相乘；获取先验框的环境向量加权结果作为环境信息
+
 
 
 ## 模型压缩、量化
