@@ -295,6 +295,27 @@ https://arxiv.org/pdf/1906.09756v1.pdf
 
 https://arxiv.org/pdf/1808.01244.pdf
 
+将检测对象边框变为检测一对关键点(左上角和右下角)；提出corner池化，更好的定位边框的角；
+
+基于anchor框的检测器有两个缺点：
+
+1. 大量anchor框；通常20k~100k个anchor边框，同时引发正负样本不均衡
+2. 引入了大量相关超参数和设计选择；边框个数、尺寸、长宽比以及在多尺寸feature map上分配等等
+
+
+
+为什么corner方式优于边框中心？推测边框中心更难定位，依赖4个边；二corner只依赖两个边；
+
+为什么corner方式由于anchor框？wh个corner可以代表${w^2h^2}$个anchor 边框；是一个更加有效的离散表示
+
+
+
+Group corner ?
+
+参考:
+
+Associative embedding: End-to-end learning for joint detection and grouping:<https://arxiv.org/pdf/1611.05424.pdf>
+
 
 
 ### ExtremeNet 
