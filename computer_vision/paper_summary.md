@@ -1245,6 +1245,8 @@ https://arxiv.org/abs/1904.01941.pdf
 
 
 
+
+
 ### 总结
 
 https://blog.csdn.net/xwukefr2tnh4/article/details/80589198
@@ -1297,9 +1299,15 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
 ### A Multi-Object Rectified Attention Network for Scene Text Recognition
 
-
+<https://arxiv.org/pdf/1901.03003.pdf>
 
  引用数：6
+
+
+
+### FACLSTM: ConvLSTM with Focused Attention for Scene Text Recognition
+
+引用数：3
 
  
 
@@ -1315,7 +1323,35 @@ https://arxiv.org/pdf/1801.01671.pdf
 
 
 
+### An end-to-end TextSpotter with Explicit Alignment and Attention
 
+<https://arxiv.org/pdf/1803.03474.pdf>
+
+ 引用数：61
+
+
+
+### Verisimilar Image Synthesis for Accurate Detection and Recognition of Texts in Scenes
+
+<https://arxiv.org/pdf/1807.03021.pdf>
+
+引用数：19 
+
+
+
+### A Novel Integrated Framework for Learning both Text Detection and Recognition
+
+https://arxiv.org/pdf/1811.08611.pdf
+
+引用数：4
+
+
+
+### You Only Recognize Once: Towards Fast Video Text Spotting
+
+<https://arxiv.org/pdf/1903.03299.pdf>
+
+ 引用数：3
 
 
 
