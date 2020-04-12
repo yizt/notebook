@@ -348,7 +348,27 @@ d) 大量的anchor边框iou计算耗时且占用内存
 
 
 
-### CenterNet: Objects as Points 
+### CenterNet: Keypoint Triplets for Object Detection
+
+https://arxiv.org/pdf/1904.08189.pdf
+
+
+
+CornerNet受限于较弱的全局信息能力(对关键点检测敏感，对哪些关键点应该是一对不敏感)；
+
+CenterNet增加一个关键点感知region的中心；同时增加两个策略center pooling,cascade corner pooling
+
+
+
+### EfficientDet
+
+https://arxiv.org/pdf/1911.09070.pdf
+
+
+
+## 实时目标检测
+
+### CenterNet: Objects as Points
 
 https://arxiv.org/pdf/1904.07850.pdf
 
@@ -369,21 +389,19 @@ https://arxiv.org/pdf/1904.07850.pdf
 
 
 
-### CenterNet: Keypoint Triplets for Object Detection
-
-https://arxiv.org/pdf/1904.08189.pdf
 
 
+### TTF:Training-Time-Friendly Network for Real-Time Object Detection
 
-CornerNet受限于较弱的全局信息能力(对关键点检测敏感，对哪些关键点应该是一对不敏感)；
-
-CenterNet增加一个关键点感知region的中心；同时增加两个策略center pooling,cascade corner pooling
+<https://arxiv.org/pdf/1909.00700.pdf>
 
 
 
-### EfficientDet
+### CSPNet: A New Backbone that can Enhance Learning Capability of CNN
 
-https://arxiv.org/pdf/1911.09070.pdf
+<https://arxiv.org/pdf/1911.11929.pdf>
+
+
 
 
 
@@ -1145,15 +1163,7 @@ https://www.jianshu.com/p/1dd8c0364710
 
 
 
-## OCR/场景文本检测、识别
-
-
-
-### CRNN
-
-类序列识别，长度变化大；CNN不能可变
-
-end-to-end、不需要字符级别标注、不受限于固定词典、序列长度
+## OCR/场景文本检测
 
 ### CTPN
 
@@ -1191,13 +1201,51 @@ Side-Refinement: 水平距离小于50像素(垂直IoU>0.7)的proposals连起来;
 
 
 
+### Canny Text Detector: Fast and Robust Scene Text Localization Algorithm
 
+<https://zpascal.net/cvpr2016/Cho_Canny_Text_Detector_CVPR_2016_paper.pdf>
+
+引用数：78
+
+
+
+### **EAST: An Efficient and Accurate Scene Text Detector** 
+
+<https://arxiv.org/pdf/1704.03155.pdf>
+
+引用数：431
+
+### ASTER: An Attentional Scene Text Recognizer with Flexible Rectification
+
+引用数：101
+
+**License Plate Detection and Recognition in Unconstrained Scenarios** 
 
 
 
 ### 总结
 
 https://blog.csdn.net/xwukefr2tnh4/article/details/80589198
+
+
+
+## OCR/文本识别
+
+### CRNN：An End-to-End Trainable Neural Network for Image-based Sequence Recognition and Its Application to Scene Text Recognition
+
+<https://arxiv.org/pdf/1507.05717.pdf>
+
+类序列识别，长度变化大；CNN不能可变
+
+end-to-end、不需要字符级别标注、不受限于固定词典、序列长度
+
+引用数：731
+
+### RARE: Robust text recognizer with Automatic Rectification
+
+<https://arxiv.org/pdf/1603.03915.pdf>
+
+引用数：216
 
 
 
