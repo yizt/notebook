@@ -1219,7 +1219,29 @@ Side-Refinement: 水平距离小于50像素(垂直IoU>0.7)的proposals连起来;
 
 引用数：101
 
-**License Plate Detection and Recognition in Unconstrained Scenarios** 
+
+
+### PSENet：Shape Robust Text Detection with Progressive Scale Expansion Network
+
+<https://arxiv.org/pdf/1806.02559.pdf>
+
+引用数：27
+
+
+
+### Pixel-Anchor：A Fast Oriented Scene Text Detector with Combined Networks
+
+<https://arxiv.org/pdf/1811.07432.pdf>
+
+引用数：9
+
+
+
+### CRAFT: Character-Region Awareness For Text detection
+
+https://arxiv.org/abs/1904.01941.pdf
+
+引用数：36
 
 
 
@@ -1246,6 +1268,54 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 <https://arxiv.org/pdf/1603.03915.pdf>
 
 引用数：216
+
+
+
+### Drawing and Recognizing Chinese Characters with Recurrent Neural Network
+
+<https://arxiv.org/pdf/1606.06539.pdf>
+
+引用数：138 
+
+
+
+### AON: Towards Arbitrarily-Oriented Text Recognition
+
+<https://arxiv.org/pdf/1711.04226.pdf>
+
+引用数：83
+
+
+
+### Edit Probability for Scene Text Recognition
+
+<https://arxiv.org/pdf/1805.03384.pdf>
+
+引用数：40
+
+
+
+### A Multi-Object Rectified Attention Network for Scene Text Recognition
+
+
+
+ 引用数：6
+
+ 
+
+
+
+### OCR/E2E检测识别
+
+### FOTS: Fast Oriented Text Spotting with a Unified Network
+
+https://arxiv.org/pdf/1801.01671.pdf
+
+引用数：133
+
+
+
+
 
 
 
