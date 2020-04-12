@@ -1281,6 +1281,22 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
 
 
+### Learning Spatial-Semantic Context with Fully Convolutional Recurrent Network for Online Handwritten Chinese Text Recognition
+
+<https://arxiv.org/pdf/1610.02616.pdf>
+
+ 引用数：47
+
+
+
+### Building Fast and Compact Convolutional Neural Networks for Offline Handwritten Chinese Character Recognition
+
+<https://arxiv.org/pdf/1702.07975.pdf>
+
+引用数：69
+
+
+
 ### AON: Towards Arbitrarily-Oriented Text Recognition
 
 <https://arxiv.org/pdf/1711.04226.pdf>
@@ -1352,6 +1368,14 @@ https://arxiv.org/pdf/1811.08611.pdf
 <https://arxiv.org/pdf/1903.03299.pdf>
 
  引用数：3
+
+
+
+### GA-DAN: Geometry-Aware Domain Adaptation Network for Scene Text Detection and Recognition
+
+<https://arxiv.org/pdf/1907.09653.pdf>
+
+引用数：2 
 
 
 
