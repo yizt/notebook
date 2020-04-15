@@ -1221,6 +1221,14 @@ Side-Refinement: 水平距离小于50像素(垂直IoU>0.7)的proposals连起来;
 
 
 
+### TextBoxes++: A Single-Shot Oriented Scene Text Detector
+
+<https://arxiv.org/pdf/1801.02765.pdf>
+
+引用数：174
+
+ 
+
 ### PSENet：Shape Robust Text Detection with Progressive Scale Expansion Network
 
 <https://arxiv.org/pdf/1806.02559.pdf>
