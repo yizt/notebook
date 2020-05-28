@@ -1,3 +1,7 @@
+[TOC]
+
+## docker环境
+
 
 ```shell
 docker pull splendor90/detectron2
@@ -31,7 +35,7 @@ python setup.py install
 ```
 
 demo 测试
- 
+
 ```shell
 export KMP_DUPLICATE_LIB_OK=TRUE
 python demo/demo.py --config-file configs/PascalVOC-Detection/faster_rcnn_R_50_C4.yaml \
@@ -39,9 +43,18 @@ python demo/demo.py --config-file configs/PascalVOC-Detection/faster_rcnn_R_50_C
   --opts MODEL.WEIGHTS /Users/yizuotian/pretrained_model/model_final_b1acc2.pkl MODEL.DEVICE cpu
 ```
 
+```shell
+export KMP_DUPLICATE_LIB_OK=TRUE
+python demo/demo.py --config-file configs/COCO-Detection/retinanet_R_50_FPN_3x.yaml \
+  --input /Users/yizuotian/pyspace/notebook/data/detection/009573.jpg \
+  --opts MODEL.WEIGHTS /Users/yizuotian/pretrained_model/model_final_4cafe0.pkl MODEL.DEVICE cpu
+```
+
+
 
 torch.jit.trace
     报错不支持
+
 ```shell
 :Could not infer type of list element: Only tensors and (possibly nested) tuples of tensors, lists, or dictsare supported as inputs or outputs of traced functions, but instead got value of type Instances. (toTypeInferredIValue at ../torch/csrc/jit/pybind_utils.h:293)
 frame #0: c10::Error::Error(c10::SourceLocation, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) + 135 (0x12af4e787 in libc10.dylib)
@@ -59,9 +72,11 @@ frame #28: 0x0 + 11 (0xb in ???)
 
 ## ubuntu下测试
 
+### coco训练
+
 ```shell
 cd /sdb/tmp/users/yizt/detectron2
-cd 
+cd datasets
 ln -s /sdb/tmp/open_dataset/COCO coco
 ```
 
@@ -73,3 +88,43 @@ python tools/train_net.py --num-gpus 4 \
 	--config-file configs/COCO-Detection/retinanet_R_50_FPN_3x.yaml
 
 ```
+
+
+### voc训练
+
+```shell
+cd /sdb/tmp/users/yizt/detectron2/datasets
+ln -s /sdb/tmp/open_dataset/VOCdevkit/VOC2007 VOC2007
+ln -s /sdb/tmp/open_dataset/VOCdevkit/VOC2012 VOC2012
+```
+
+
+
+```shell
+export CUDA_DEVICE_ORDER="PCI_BUS_ID"
+export CUDA_VISIBLE_DEVICES="0,1,2,3,4,5,6,7"
+python tools/train_net.py --num-gpus 8 \
+	--config-file configs/PascalVOC-Detection/faster_rcnn_R_50_C4.yaml
+```
+
+
+
+## CenterNet-better
+
+​       CenterNet-better依赖detectron2
+
+```shell
+cd CenterNet-better/datasets
+ln -s /sdb/tmp/open_dataset/VOCdevkit/VOC2007 VOC2007
+ln -s /sdb/tmp/open_dataset/VOCdevkit/VOC2012 VOC2012
+```
+
+
+
+```shell
+cd CenterNet-better/playground/centernet.res18.voc.512size
+export CUDA_DEVICE_ORDER="PCI_BUS_ID"
+export CUDA_VISIBLE_DEVICES="2,3,4,5,6,7"
+dl_train --num-gpus 6
+```
+
