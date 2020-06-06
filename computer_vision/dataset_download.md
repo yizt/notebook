@@ -14,8 +14,13 @@ http://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_devkit_t12.tar
 
 训练集类别id:https://gist.github.com/aaronpolhamus/964a4411c0906315deb9f4a3723aac57
 
-
 ## 目标检测
+
+### Clipart1K，Comic2K，Watercolor2K
+
+卡通图像
+
+
 
 ### MSCOCO
 
@@ -202,3 +207,35 @@ wget -c -t 0 https://www.crcv.ucf.edu/data/UCF101/UCF101.rar
 
 
 
+## ocr
+
+### Synth80k
+
+- paper：[Synthetic Data for Text Localisation in Natural Images](http://www.robots.ox.ac.uk/~ankush/textloc.pdf)
+- [数据库下载](http://www.robots.ox.ac.uk/~vgg/data/scenetext/)
+- [代码下载](https://github.com/ankush-me/SynthText)
+- 地址:http://www.robots.ox.ac.uk/~vgg/data/scenetext/SynthText.zip
+
+
+
+### Synth90k
+
+- paper：[Synthetic Data and Artificial Neural Networks for Natural Scene Text Recognition](https://arxiv.org/pdf/1406.2227.pdf)
+- [数据库下载](http://www.robots.ox.ac.uk/~vgg/data/text/)
+- MJSynth: http://www.robots.ox.ac.uk/~vgg/data/text/mjsynth.tar.gz 
+
+
+
+### SVT
+
+- paper：[Word Spotting in the Wild](http://vision.ucsd.edu/~kai/pubs/wang_eccv2010.pdf)
+- [数据库下载](http://vision.ucsd.edu/~kai/grocr/)
+- 地址：http://www.iapr-tc11.org/dataset/SVT/svt.zip
+
+
+
+### IIIT5K-Word
+
+- paper：[Scene Text Recognition using Higher Order Language Priors](http://www.di.ens.fr/willow/pdfscurrent/mishra12a.pdf)
+- [数据库下载](http://cvit.iiit.ac.in/research/projects/cvit-projects/the-iiit-5k-word-dataset)
+- 地址：http://cvit.iiit.ac.in/images/Projects/SceneTextUnderstanding/IIIT5K-Word_V3.0.tar.gz
