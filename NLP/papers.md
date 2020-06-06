@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 ### A neural probabilistic language model
 
 https://www.researchgate.net/publication/221618573_A_Neural_Probabilistic_Language_Model
@@ -29,6 +33,38 @@ https://www.researchgate.net/publication/221618573_A_Neural_Probabilistic_Langua
 ### word2vec Parameter Learning Explained
 
 https://arxiv.org/pdf/1411.2738
+
+
+
+
+
+### Attention Is All You Need
+
+<https://arxiv.org/pdf/1706.03762.pdf>
+
+
+
+### ELMo:Deep contextualized word representations
+
+<https://arxiv.org/pdf/1802.05365.pdf>
+
+
+
+
+
+
+
+### BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
+
+https://arxiv.org/pdf/1810.04805.pdf
+
+
+
+### GPT:Improving Language Understanding by Generative Pre-Training
+
+<https://www.cs.ubc.ca/~amuham01/LING530/papers/radford2018improving.pdf>
+
+
 
  
 
