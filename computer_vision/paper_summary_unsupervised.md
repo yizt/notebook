@@ -1,4 +1,4 @@
-### Unsupervised Feature Learning via Non-Parametric Instance Discrimination
+### InstDisc : Unsupervised Feature Learning via Non-Parametric Instance Discrimination
 
 <https://arxiv.org/pdf/1805.01978v1.pdf>
 
