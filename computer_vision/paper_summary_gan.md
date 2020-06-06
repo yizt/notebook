@@ -4,9 +4,11 @@
 
 
 
+Learning to discover cross-domain relations with generative adversarial networks
 
+DualGAN: Unsupervised dual learning for image-to-image translation 
 
-
+Unsupervised image-to- image translation networks
 
 
 
