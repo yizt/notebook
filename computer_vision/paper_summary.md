@@ -1215,10 +1215,6 @@ Side-Refinement: 水平距离小于50像素(垂直IoU>0.7)的proposals连起来;
 
 引用数：431
 
-### ASTER: An Attentional Scene Text Recognizer with Flexible Rectification
-
-引用数：101
-
 
 
 ### TextBoxes++: A Single-Shot Oriented Scene Text Detector
@@ -1253,6 +1249,12 @@ https://arxiv.org/abs/1904.01941.pdf
 
 
 
+### DB:Real-time Scene Text Detection with Differentiable Binarization
+
+<https://arxiv.org/abs/1911.08947>
+
+引用数：1
+
 
 
 ### 总结
@@ -1273,11 +1275,25 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
 引用数：731
 
-### RARE: Robust text recognizer with Automatic Rectification
+### RARE: Robust Scene Text Recognition with Automatic Rectifification 
 
 <https://arxiv.org/pdf/1603.03915.pdf>
 
 引用数：216
+
+
+
+### Recursive Recurrent Nets with Attention Modeling for OCR in the Wild
+
+<https://arxiv.org/pdf/1603.03101.pdf>
+
+
+
+### ASTER: An Attentional Scene Text Recognizer with Flexible Rectification
+
+<https://www.vlrlab.net/admin/uploads/avatars/ASTER_An_Attentional_Scene_Text_Recognizer_with_Flexible_Rectification.pdf>
+
+引用数：101
 
 
 
@@ -1297,11 +1313,37 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
 
 
+### Recursive recurrent nets with attention modeling for OCR in the wild
+
+
+
+
+
 ### Building Fast and Compact Convolutional Neural Networks for Offline Handwritten Chinese Character Recognition
 
 <https://arxiv.org/pdf/1702.07975.pdf>
 
 引用数：69
+
+
+
+
+
+### Attention-based Extraction of Structured Information from Street View Imagery
+
+<https://arxiv.org/pdf/1704.03549.pdf>
+
+
+
+
+
+### Learning to read irregular text with attention mechanisms.
+
+
+
+### Focusing Attention: Towards Accurate Text Recognition in Natural Images
+
+<https://arxiv.org/pdf/1709.02054.pdf>
 
 
 
@@ -1319,9 +1361,13 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
 引用数：40
 
+大多数文字识别网络的架构是encoder-decoder；encoder为cnn或crnn,decoder为rnn或ctc或attention机制
+
+名词：probability distribution (pd) ， frame-wise probability (FP) ；attention drift 问题
 
 
-### A Multi-Object Rectified Attention Network for Scene Text Recognition
+
+### MORAN: A Multi-Object Rectified Attention Network for Scene Text Recognition
 
 <https://arxiv.org/pdf/1901.03003.pdf>
 
@@ -1333,11 +1379,27 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
 引用数：3
 
+
+
+不规则文本识别难以收敛；
+
+MORN 比仿射变换好，仿射变换不能捕捉弯曲等复杂形变；比RARE(ASTER)好，当图像宽度大时无法捕获文本形状细节
+
+
+
+### TextScanner: Reading Characters in Order for Robust Scene Text Recognition
+
+<https://arxiv.org/pdf/1912.12422.pdf>
+
+引用数：0
+
+ 
+
  
 
 
 
-### OCR/E2E检测识别
+## OCR/E2E检测识别
 
 ### FOTS: Fast Oriented Text Spotting with a Unified Network
 
@@ -1384,6 +1446,40 @@ https://arxiv.org/pdf/1811.08611.pdf
 <https://arxiv.org/pdf/1907.09653.pdf>
 
 引用数：2 
+
+
+
+## OCR/字符分割
+
+### Character Segmentation in Asian Collector’s Seal Imprints: An Attempt to Retrieval Based on Ancient Character Typeface
+
+<https://arxiv.org/pdf/2003.00831.pdf>
+
+https://github.com/timcanby/collector-s_seal-ImageProcessing.git
+
+
+
+### Word and character segmentation directly in run-length compressed handwritten document images
+
+<https://arxiv.org/pdf/1909.05146.pdf>
+
+
+
+### Chinese/English mixed Character Segmentation as Semantic Segmentation
+
+<https://arxiv.org/pdf/1611.01982.pdf>
+
+
+
+### AUTOMATIC TEXT EXTRACTION AND CHARACTER SEGMENTATION USING MAXIMALLY STABLE EXTREMAL REGIONS
+
+<https://arxiv.org/pdf/1608.03374.pdf>
+
+
+
+
+
+<https://arxiv.org/pdf/1707.00800.pdf>
 
 
 
