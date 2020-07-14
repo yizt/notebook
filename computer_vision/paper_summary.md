@@ -1207,6 +1207,16 @@ Side-Refinement: 水平距离小于50像素(垂直IoU>0.7)的proposals连起来;
 
 引用数：78
 
+使用ER提取候选
+
+NMS过滤
+
+双阈值分类
+
+文本分组
+
+输出结果
+
 
 
 ### **EAST: An Efficient and Accurate Scene Text Detector** 
@@ -1222,6 +1232,10 @@ Side-Refinement: 水平距离小于50像素(垂直IoU>0.7)的proposals连起来;
 <https://arxiv.org/pdf/1801.02765.pdf>
 
 引用数：174
+
+设计长卷积核，多层预测
+
+4方面
 
  
 
@@ -1247,6 +1261,22 @@ https://arxiv.org/abs/1904.01941.pdf
 
 引用数：36
 
+CRAFT for Character Region Awareness For Text detec- tion
+
+character region score 和 character affinity score ；弱监督生成虚拟字符标注；
+
+使用字符和字符的亲和度检测文本，利用合成的数据集的字符级别标注及真实数据集模型评估的字符位置
+
+
+
+region score : 字符的中心概率
+
+affinity score ：相邻两个字符的中心概率
+
+
+
+置信度得分：检测字符数/GT字符数	；得分小于0.5时，字符宽度使用边框宽度/字符数，然后置信度得分设置为0.5
+
 
 
 ### DB:Real-time Scene Text Detection with Differentiable Binarization
@@ -1264,6 +1294,12 @@ https://blog.csdn.net/xwukefr2tnh4/article/details/80589198
 
 
 ## OCR/文本识别
+
+### Strokelets: A Learned Multi-Scale Representation for Scene Text Recognition
+
+<https://www.cv-foundation.org/openaccess/content_cvpr_2014/papers/Yao_Strokelets_A_Learned_2014_CVPR_paper.pdf>
+
+
 
 ### CRNN：An End-to-End Trainable Neural Network for Image-based Sequence Recognition and Its Application to Scene Text Recognition
 
@@ -1283,9 +1319,11 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
 
 
-### Recursive Recurrent Nets with Attention Modeling for OCR in the Wild
+### R2AM: Recursive Recurrent Nets with Attention Modeling for OCR in the Wild
 
 <https://arxiv.org/pdf/1603.03101.pdf>
+
+
 
 
 
@@ -1313,10 +1351,6 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
 
 
-### Recursive recurrent nets with attention modeling for OCR in the wild
-
-
-
 
 
 ### Building Fast and Compact Convolutional Neural Networks for Offline Handwritten Chinese Character Recognition
@@ -1338,6 +1372,8 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
 
 ### Learning to read irregular text with attention mechanisms.
+
+<http://clgiles.ist.psu.edu/pubs/IJCAI2017.pdf>
 
 
 
@@ -1373,6 +1409,28 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
  引用数：6
 
+不规则文本识别难以收敛；
+
+MORN 比仿射变换好，仿射变换不能捕捉弯曲等复杂形变；比RARE(ASTER)好，当图像宽度大时无法捕获文本形状细节
+
+
+
+### Aggregation Cross-Entropy for Sequence Recognition 
+
+
+
+CTC计算量大，无法应用到2D场景；
+
+Attention机制依赖于标签对齐，导致额外存储和计算，由于错位问题基于Attention的识别模型很难从头开始训练，特别是长输入序列
+
+
+
+ACE包括三个简单步骤
+
+1. 每个类别延时间维度集成
+2. 标准化预测和GT的累积分布
+3. 使用交叉熵计算式两个累积分布的loss
+
 
 
 ### FACLSTM: ConvLSTM with Focused Attention for Scene Text Recognition
@@ -1381,9 +1439,7 @@ end-to-end、不需要字符级别标注、不受限于固定词典、序列长�
 
 
 
-不规则文本识别难以收敛；
 
-MORN 比仿射变换好，仿射变换不能捕捉弯曲等复杂形变；比RARE(ASTER)好，当图像宽度大时无法捕获文本形状细节
 
 
 
@@ -1394,6 +1450,10 @@ MORN 比仿射变换好，仿射变换不能捕捉弯曲等复杂形变；比RAR
 引用数：0
 
  
+
+## ABCNet：Real-time Scene Text Spotting with Adaptive Bezier-Curve Network
+
+<https://arxiv.org/pdf/2002.10200.pdf>
 
  
 
@@ -1728,6 +1788,154 @@ These results suggest that we should quantize different parts of the networks wi
 ### GFTE: Graph-based Financial Table Extraction
 
 <https://arxiv.org/pdf/2003.07560.pdf>
+
+
+
+
+
+## 半监督
+
+### Semi-Supervised Learning with Ladder Networks
+
+<https://arxiv.org/pdf/1507.02672.pdf>
+
+
+
+### TEMPORAL ENSEMBLING FOR SEMI-SUPERVISED LEARNING
+
+<https://arxiv.org/pdf/1610.02242.pdf>
+
+
+
+### Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results
+
+<https://arxiv.org/pdf/1703.01780.pdf>
+
+
+
+
+
+## 风格迁移
+
+### Texture Synthesis Using Convolutional Neural Networks
+
+
+
+### A Neural Algorithm of Artistic Style
+
+<https://arxiv.org/pdf/1508.06576.pdf>
+
+
+
+### Image Style Transfer Using Convolutional Neural Networks
+
+<https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf>
+
+
+
+### INCORPORATING LONG-RANGE CONSISTENCY IN CNN-BASED TEXTURE GENERATION
+
+<https://arxiv.org/pdf/1606.01286.pdf>
+
+
+
+### Neural Style Transfer: A Review
+
+<https://arxiv.org/pdf/1705.04058v7.pdf>
+
+
+
+### Demystifying Neural Style Transfer
+
+<https://arxiv.org/pdf/1701.01036.pdf>
+
+
+
+
+
+### Laplacian-Steered Neural Style Transfer
+
+<https://arxiv.org/pdf/1707.01253.pdf>
+
+
+
+
+
+### Arbitrary Style Transfer with Deep Feature Reshuffle
+
+<https://arxiv.org/pdf/1805.04103.pdf>
+
+
+
+### Combining Markov Random Fields and Convolutional Neural Networks for Image Synthesis
+
+<https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Li_Combining_Markov_Random_CVPR_2016_paper.pdf>
+
+
+
+### Perceptual Losses for Real-Time Style Transfer and Super-Resolution
+
+<https://arxiv.org/pdf/1603.08155.pdf>
+
+
+
+
+
+### Texture Networks: Feed-forward Synthesis of Textures and Stylized Images
+
+<http://proceedings.mlr.press/v48/ulyanov16.pdf>
+
+
+
+### Precomputed Real-Time Texture Synthesis with Markovian Generative Adversarial Networks
+
+<https://arxiv.org/pdf/1604.04382.pdf>
+
+
+
+### **Image-to-Image Translation with Conditional Adversarial Networks** 
+
+
+
+### A Learned Representation for Artistic Style
+
+
+
+### StyleBank: An Explicit Representation for Neural Image Style Transfer
+
+
+
+### Multi-style Generative Network for Real-time Transfer
+
+
+
+### Diversified Texture Synthesis With Feed-Forward Networks
+
+
+
+### Fast Patch-based Style Transfer of Arbitrary Style
+
+
+
+### Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization
+
+
+
+### Exploring the Structure of a Real-time, Arbitrary Neural Artistic Stylization Network
+
+
+
+### Universal Style Transfer via Feature Transforms
+
+
+
+### Meta Networks for Neural Style Transfer
+
+<https://arxiv.org/pdf/1709.04111.pdf>
+
+
+
+
 
 
 
