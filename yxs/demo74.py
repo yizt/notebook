@@ -139,11 +139,20 @@ class BaseModel(nn.Module):
         self.cnn = self.feature_extractor()
 
         # gender分类
-        self.fc1 = nn.Linear(self.fc_units, len(gender_list))
+        self.fc1 = nn.Sequential(nn.Linear(self.fc_units, self.fc_units // 2),
+                                 nn.BatchNorm1d(self.fc_units // 2),
+                                 nn.ReLU(inplace=True),
+                                 nn.Linear(self.fc_units // 2, len(gender_list)))
         # category分类
-        self.fc2 = nn.Linear(self.fc_units, len(category_list))
+        self.fc2 = nn.Sequential(nn.Linear(self.fc_units, self.fc_units // 2),
+                                 nn.BatchNorm1d(self.fc_units // 2),
+                                 nn.ReLU(inplace=True),
+                                 nn.Linear(self.fc_units // 2, len(category_list)))
         # sport分类
-        self.fc3 = nn.Linear(self.fc_units, len(sport_list))
+        self.fc3 = nn.Sequential(nn.Linear(self.fc_units, self.fc_units // 2),
+                                 nn.BatchNorm1d(self.fc_units // 2),
+                                 nn.ReLU(inplace=True),
+                                 nn.Linear(self.fc_units // 2, len(sport_list)))
 
     @property
     def fc_units(self):
@@ -181,6 +190,17 @@ class ResNetModel(BaseModel):
         return nn.Sequential(*list(resnet.children())[:-2])
 
 
+class ResNeXtModel(BaseModel):
+    @property
+    def fc_units(self):
+        return 2048
+
+    @classmethod
+    def feature_extractor(cls):
+        resnet = models.resnext50_32x4d(pretrained=True)
+        return nn.Sequential(*list(resnet.children())[:-2])
+
+
 class ShuffleModel(BaseModel):
     @property
     def fc_units(self):
@@ -207,6 +227,8 @@ class DenseNetModel(BaseModel):
 def get_net(net_name):
     if net_name == 'resnet':
         return ResNetModel()
+    if net_name == 'resnext':
+        return ResNeXtModel()
     if net_name == 'shufflenet':
         return ShuffleModel()
     if net_name == 'densenet':
@@ -233,6 +255,31 @@ def calculate_loss(gender_true, category_true, sport_true,
     loss1 = single_loss(gender_true, gender_predict)
     loss2 = single_loss(category_true, category_predict)
     loss3 = single_loss(sport_true, sport_predict)
+    return (loss1 + loss2 + loss3) / 3.
+
+
+def single_test_loss(y_predict, min_score=0.8):
+    """
+
+    :param y_predict: [B,num_classes]
+    :param min_score:
+    :return:
+    """
+    y_predict = torch.softmax(y_predict, dim=-1)
+    pseudo_gt = torch.where(y_predict >= min_score, y_predict, torch.zeros_like(y_predict))
+    num_samples = torch.sum(torch.where(y_predict >= min_score,
+                                        torch.ones_like(y_predict),
+                                        torch.zeros_like(y_predict)))
+
+    loss = -torch.sum(torch.log(y_predict) * pseudo_gt) / num_samples
+
+    return loss
+
+
+def calculate_test_loss(gender_predict, category_predict, sport_predict):
+    loss1 = single_test_loss(gender_predict)
+    loss2 = single_test_loss(category_predict)
+    loss3 = single_test_loss(sport_predict)
     return (loss1 + loss2 + loss3) / 3.
 
 
@@ -286,6 +333,19 @@ def main(args):
         epoch_loss = 0
 
         net.train()
+
+        # 半监督学习，测试集加入训练
+        if epoch >= 60:
+            for sample in tqdm(test_data_loader):
+                image = sample['image'].to(device)
+
+                gender_predict, category_predict, sport_predict = net(image)  # [B,N,C]
+                loss = calculate_test_loss(gender_predict, category_predict, sport_predict)
+                # 梯度更新
+                net.zero_grad()
+                loss.backward()
+                optimizer.step()
+
         for sample in tqdm(data_loader):
             image = sample['image'].to(device)
             gender = sample['gender'].to(device)
@@ -301,6 +361,8 @@ def main(args):
             optimizer.step()
             # 当前轮的loss
             epoch_loss += loss.item() * image.size(0)
+
+
 
         # 更新lr
         lr_scheduler.step(epoch)
@@ -377,7 +439,8 @@ if __name__ == '__main__':
     export CUDA_DEVICE_ORDER="PCI_BUS_ID"
     export CUDA_VISIBLE_DEVICES=0
     cd /home/mydir/code
-    python demo74.py -i /home/mydir/dataset/yanxishe_74 --device cuda --epochs 193 --init-epoch 193
+    python demo74.py -i /home/mydir/dataset/yanxishe_74 --device cuda --net resnext --batch-size 32 \
+     --epochs 193 --init-epoch 193
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--syn-root', type=str, default='/home/mydir/dataset/yanxishe_74')
@@ -387,7 +450,7 @@ if __name__ == '__main__':
     parser.add_argument("--epochs", type=int, default=80, help="epochs")
     parser.add_argument("--init-epoch", type=int, default=0, help="init epoch")
     parser.add_argument("--lr", type=float, default=1e-2, help="learning rate")
-    parser.add_argument("--step-size", type=int, default=20, help="step size")
+    parser.add_argument("--step-size", type=int, default=30, help="step size")
     parser.add_argument('--weight-decay', default=1e-5, type=float, help='weight decay (default: 0)')
     parser.add_argument("--workers", type=int, default=4, help="number of workers")
     parser.add_argument('--output-dir', default='./output', help='path where to save')
