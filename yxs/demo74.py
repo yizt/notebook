@@ -137,6 +137,8 @@ class BaseModel(nn.Module):
         super(BaseModel, self).__init__(**kwargs)
         # 使用预训练基模型
         self.cnn = self.feature_extractor()
+        for p in self.parameters():
+            p.requires_grad = False
 
         # gender分类
         self.fc1 = nn.Sequential(nn.Linear(self.fc_units, self.fc_units // 2),
@@ -245,8 +247,20 @@ def single_loss(y_true, y_predict):
     y_predict = torch.softmax(y_predict, dim=-1)
     y_predict = y_predict + 1e-10
 
-    loss = -torch.sum(torch.log(y_predict) * y_true[:, :-1]) / torch.sum(y_true[:, -1])
+    loss = -torch.log(y_predict) * y_true[:, :-1]
+    loss = loss[loss > 0]  # [N]
+    # print(loss.size())
+    num = loss.size(0)
 
+    # 去除头尾
+    tail_num = num // 2
+    sorted_loss, ix = torch.sort(loss, descending=True)
+    sorted_loss = sorted_loss[1:-tail_num]
+
+    loss = torch.sum(sorted_loss) / (num - tail_num - 1)
+
+    # loss = -torch.sum(torch.log(y_predict) * y_true[:, :-1]) / torch.sum(y_true[:, -1])
+    # print(loss.size())
     return loss
 
 
@@ -317,7 +331,8 @@ def main(args):
     net = get_net(args.net)
     net.to(device)
 
-    optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay)
+    optimizer = optim.SGD(filter(lambda p: p.requires_grad, net.parameters()),
+                          lr=args.lr, momentum=0.9, weight_decay=args.weight_decay)
     lr_scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=args.step_size)
     # 加载预训练模型
     if args.init_epoch > 0:
@@ -361,8 +376,6 @@ def main(args):
             optimizer.step()
             # 当前轮的loss
             epoch_loss += loss.item() * image.size(0)
-
-
 
         # 更新lr
         lr_scheduler.step(epoch)
