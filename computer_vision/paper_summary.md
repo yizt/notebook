@@ -1247,11 +1247,27 @@ NMS过滤
 
 
 
+### TextSnake: A Flexible Representation for Detecting Text of Arbitrary Shapes
+
+<https://arxiv.org/pdf/1807.01544.pdf>
+
+
+
+
+
 ### Pixel-Anchor：A Fast Oriented Scene Text Detector with Combined Networks
 
 <https://arxiv.org/pdf/1811.07432.pdf>
 
-引用数：9
+引用数：10
+
+
+
+### TextField: Learning A Deep Direction Field for Irregular Scene Text Detection
+
+<https://arxiv.org/pdf/1812.01393.pdf>
+
+引用数：53
 
 
 
@@ -1279,13 +1295,29 @@ affinity score ：相邻两个字符的中心概率
 
 
 
+### PAN Efficient and Accurate Arbitrary-Shaped Text Detection with Pixel Aggregation Network
+
+<https://arxiv.org/pdf/1908.05900.pdf>
+
+引用数：12
+
+
+
+### Convolutional Character Networks
+
+<https://arxiv.org/pdf/1910.07954.pdf>
+
+
+
 ### DB:Real-time Scene Text Detection with Differentiable Binarization
 
 <https://arxiv.org/abs/1911.08947>
 
-引用数：1
+引用数：7
 
+产生：probability map (F)和 threshold map(T) ；然后 根据F和T计算approximate binary map
 
+threshold map用于二值化
 
 ### 总结
 
@@ -1506,6 +1538,12 @@ https://arxiv.org/pdf/1811.08611.pdf
 <https://arxiv.org/pdf/1907.09653.pdf>
 
 引用数：2 
+
+
+
+### Mask TextSpotter v3: Segmentation Proposal Network for Robust Scene Text Spotting
+
+<https://arxiv.org/pdf/2007.09482.pdf>
 
 
 
