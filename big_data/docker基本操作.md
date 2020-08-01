@@ -287,6 +287,72 @@ docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 
 
 
+## 离线安装Nvidia-docker
+
+```
+LOCALDIR=/var/lib/nvidia-docker-repo
+
+mkdir -p $LOCALDIR && cd $LOCALDIR
+git clone -b gh-pages https://github.com/NVIDIA/libnvidia-container.git
+git clone -b gh-pages https://github.com/NVIDIA/nvidia-container-runtime.git
+git clone -b gh-pages https://github.com/NVIDIA/nvidia-docker.git
+
+```
+
+
+
+Change `/var/lib/nvidia-docker-repo/nvidia-docker/centos7/nvidia-docker.repo` like this
+
+```
+[libnvidia-container]
+name=libnvidia-container
+baseurl=file:///var/lib/nvidia-docker-repo/libnvidia-container/centos7/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=file:///var/lib/nvidia-docker-repo/libnvidia-container/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+[nvidia-container-runtime]
+name=nvidia-container-runtime
+baseurl=file:///var/lib/nvidia-docker-repo/nvidia-container-runtime/centos7/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=file:///var/lib/nvidia-docker-repo/nvidia-container-runtime/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+[nvidia-docker]
+name=nvidia-docker
+baseurl=file:///var/lib/nvidia-docker-repo/nvidia-docker/centos7/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=file:///var/lib/nvidia-docker-repo/nvidia-docker/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+```
+
+
+
+```
+cp /var/lib/nvidia-docker-repo/nvidia-docker/centos7/nvidia-docker.repo /etc/yum.repos.d/nvidia-docker.repo
+sudo yum install -y nvidia-docker2-2.0.3-1.docker18.06.1.ce
+https://github.com/NVIDIA/nvidia-docker/issues/655
+#Retart docker
+systemctl restart docker
+```
+
+
+
+参考：<https://github.com/NVIDIA/nvidia-docker/issues/655>
+
+<https://github.com/NVIDIA/nvidia-docker/issues/635#issuecomment-365160098>
+
+
+
 ## mac主机安装
 
 ```shell

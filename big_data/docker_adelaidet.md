@@ -13,8 +13,11 @@ docker exec -it yizt_crnn /bin/bash
 
 # 系统包更新
 apt-get update
-apt-get install libglib2.0-dev
-apt-get install apt-file
+
+apt-get install vim  
+
+apt-get install libglib2.0-dev -y
+apt-get install apt-file -y
 apt-file update 
 apt-file search libSM.so.6
 apt-get install libsm6

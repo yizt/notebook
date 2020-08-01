@@ -41,6 +41,6 @@ docker run --gpus all pytorch/pytorch nvidia-smi
 样例
 
 ```
-docker run -it --gpus all --net host -v /home/mydir:/home/mydir pytorch/pytorch /bin/bash
+docker run -it --gpus all --net host -v /home/mydir:/home/mydir --name yizt pytorch/pytorch /bin/bash
 ```
 
