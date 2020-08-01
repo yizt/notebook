@@ -260,3 +260,10 @@ annotations：是每个标准框信息，其中rec是gt 文本的每个字符的
 
 images: 是所有图像信息，id是图像的编号
 
+
+
+### MSRA500
+
+
+
+![](pic/msra500_ann.jpg)
