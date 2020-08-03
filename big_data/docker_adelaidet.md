@@ -16,12 +16,18 @@ apt-get update
 
 apt-get install vim  
 
+apt-get install python3
+
+apt-get install python3-pip
+
 apt-get install libglib2.0-dev -y
 apt-get install apt-file -y
 apt-file update 
 apt-file search libSM.so.6
-apt-get install libsm6
-apt-get install libxrender1
+apt-get install libsm6 -y
+apt-get install libxrender1 -y
+
+apt-get install libxext-dev -y
 
 
 # python 依赖包
@@ -70,6 +76,7 @@ pip install Polygon3
 
 git clone https://github.com/aim-uofa/AdelaiDet.git
 cd AdelaiDet
+
 python setup.py build develop
 
 # 保存为image
