@@ -1167,6 +1167,8 @@ https://www.jianshu.com/p/1dd8c0364710
 
 ### CTPN
 
+<https://arxiv.org/pdf/1609.03605.pdf>
+
 固定宽度、垂直的anchor
 
 CNN+RNN组合,in-network rnn
@@ -1216,6 +1218,14 @@ NMS过滤
 文本分组
 
 输出结果
+
+
+
+### TextBoxes: A Fast Text Detector with a Single Deep Neural Network
+
+<https://arxiv.org/pdf/1611.06779>
+
+
 
 
 
@@ -1471,6 +1481,16 @@ ACE包括三个简单步骤
 
 
 
+### A Simple and Robust Convolutional-Attention Network for Irregular Text Recognition
+
+<https://arxiv.org/pdf/1904.01375v1.pdf>
+
+
+
+### A Holistic Representation Guided Attention Network for Scene Text Recognition
+
+ <https://arxiv.org/pdf/1904.01375v4.pdf>
+
 
 
 
@@ -1481,13 +1501,17 @@ ACE包括三个简单步骤
 
 引用数：0
 
+
+
+
+
  
 
 ## ABCNet：Real-time Scene Text Spotting with Adaptive Bezier-Curve Network
 
 <https://arxiv.org/pdf/2002.10200.pdf>
 
- 
+ 引用数：4
 
 
 
@@ -1538,6 +1562,28 @@ https://arxiv.org/pdf/1811.08611.pdf
 <https://arxiv.org/pdf/1907.09653.pdf>
 
 引用数：2 
+
+
+
+
+
+### Mask TextSpotter: An End-to-End Trainable Neural Network for Spotting Text with Arbitrary Shapes
+
+<https://arxiv.org/pdf/1807.02242.pdf>
+
+
+
+### Mask TextSpotter v2: An End-to-End Trainable Neural Network for Spotting Text with Arbitrary Shapes
+
+<https://arxiv.org/pdf/1908.08207.pdf>
+
+
+
+### Towards Unconstrained End-to-End Text Spotting
+
+<https://arxiv.org/pdf/1908.09231.pdf>
+
+引用数：13
 
 
 
