@@ -6,7 +6,13 @@
 wget https://get.enterprisedb.com/postgresql/postgresql-9.5.19-1-linux-x64.run
 ```
 
-
+配置文件/opt/PostgreSQL/9.5/data/postgresql.conf
+```shell
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            md5
+host    all     all     10.33.2.0/24    trust
+host    all     all     10.33.3.0/24    trust
+```
 
 启停
 
