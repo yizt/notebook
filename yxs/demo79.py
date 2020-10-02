@@ -10,7 +10,6 @@ import os
 import catboost as cb
 import numpy as np
 import pandas as pd
-import torch
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
 
@@ -62,6 +61,10 @@ def load_data(data_root):
     test = pd.merge(test, movie_stat, how='left', left_on='movie_id',
                     right_index=True, suffixes=('', '_movie'))
 
+    train['us_delta'] = (train['score'] - train['mean']) / train['std']
+    train['ms_delta'] = (train['score'] - train['mean_movie']) / train['std_movie']
+    train['ms_delta'] = train['ms_delta'].fillna(0)
+
     # test = test.rename(columns={'score': 'score_max'})
 
     train = pd.merge(train, movies, left_on='movie_id', right_on='movie_id', sort=True)
@@ -73,20 +76,28 @@ def load_data(data_root):
     train['w_days'] = (train.time - train.release_date).dt.days
     test['w_days'] = (test.time - test.release_date).dt.days
 
+    """
+    train_accuracy：0.430 
+    test_accuracy：0.407
+    """
+    # y = train['ms_delta']
+    # y = train['us_delta']
     y = train['score']
 
     assert np.alltrue(test['userId'] == origin_test['userId'])
     assert np.alltrue(test['movie_id'] == origin_test['movie_id'])
 
-    x = train.drop(columns=['score', 'time',  # train
+    x = train.drop(columns=['score', 'time', 'us_delta', 'ms_delta',  # train
                             'useZipcode',  # user
-                            # 'userId', 'movie_id',
-                            'movie_title', 'release_date', 'video_release_date', 'IMDb_URL'])
+                            'userId', 'movie_id',
+                            # 'movie_title',
+                            'release_date', 'video_release_date', 'IMDb_URL'])
 
     test = test.drop(columns=['time',  # test
                               'useZipcode',  # user
-                              # 'userId', 'movie_id',
-                              'movie_title', 'release_date', 'video_release_date', 'IMDb_URL'])
+                              'userId', 'movie_id',
+                              # 'movie_title',
+                              'release_date', 'video_release_date', 'IMDb_URL'])
 
     # test.columns = x.columns
     print(x.columns)
@@ -114,8 +125,12 @@ def cls_boost(data_root, out_csv_file):
                   'year', 'month', 'week',
                   'w_year', 'w_month', 'w_week']]
 
+    text_index = [i for i, col in enumerate(x.columns) if col in
+                 ['movie_title']]
+
     model = cb.CatBoostClassifier(iterations=1000, learning_rate=0.1,
                                   od_type="Iter", l2_leaf_reg=3,
+                                  text_features=text_index,
                                   depth=10, cat_features=cat_index)
 
     model.fit(x_train, y_train, eval_set=(x_test, y_test))
@@ -132,7 +147,7 @@ def cls_boost(data_root, out_csv_file):
                                                                 sep=',', index=False, header=None)
 
 
-def rgr_boost(data_root, out_csv_file):
+def rgr_boost(data_root, out_csv_file, delta=True):
     """
     # 去除邮编
     train_accuracy：0.457
@@ -152,6 +167,7 @@ def rgr_boost(data_root, out_csv_file):
 
     :param data_root:
     :param out_csv_file:
+    :param delta:
     :return:
     """
     x, y, test, origin_test = load_data(data_root)
@@ -162,22 +178,39 @@ def rgr_boost(data_root, out_csv_file):
                   'userId', 'movie_id',
                   'year', 'month', 'week',
                   'w_year', 'w_month', 'w_week']]
+    text_indx = [i for i, col in enumerate(x.columns) if col in
+                 ['movie_title']]
 
     model = cb.CatBoostRegressor(iterations=1000, learning_rate=0.1,
                                  od_type="Iter", l2_leaf_reg=3, model_size_reg=3,
                                  depth=10,
+
                                  cat_features=cat_index)
 
     model.fit(x_train, y_train, eval_set=(x_test, y_test))
 
     print("train_accuracy：{:.3f} \n"
-          " test_accuracy：{:.3f}".format(np.mean(y_train == model.predict(x_train).round().astype('int32')),
-                                         np.mean(y_test == model.predict(x_test).round().astype('int32'))))
+          " test_accuracy：{:.3f}".format(accuracy(model, x_train, y_train, delta),
+                                         accuracy(model, x_test, y_test, delta)))
     save_feature_importance(model, os.path.join(data_root, 'feature_rgr.png'))
 
-    origin_test['score'] = model.predict(test).round().astype('int32')
+    origin_test['score'] = predict(model, test, delta).round().astype('int32')
     origin_test[['userId', 'movie_id', 'time', 'score']].to_csv(os.path.join(data_root, out_csv_file),
                                                                 sep=',', index=False, header=None)
+
+
+def accuracy(model, x, y, delta=True):
+    y_predict = predict(model, x, delta)
+    y = y * x['std'] + x['mean']
+    return np.mean(y.round().astype('int32') == y_predict.round().astype('int32'))
+
+
+def predict(model, x, delta=True):
+    y_predict = model.predict(x)
+    if delta:
+        y_predict = y_predict * x['std'] + x['mean']
+
+    return y_predict
 
 
 def save_feature_importance(model, png_path):
@@ -187,20 +220,6 @@ def save_feature_importance(model, png_path):
     plt.savefig(png_path, format='png')
 
 
-def accuracy(net, data_loader):
-    net.eval()
-    acc_list = []
-    for users, movies, scores, _ in data_loader:
-        scores_pred = net(users, movies)
-        scores_pred *= data_loader.dataset.std
-        scores_pred += data_loader.dataset.mean
-        acc = (torch.round(scores_pred) == scores).numpy()
-        acc_list.append(acc)
-
-    acc_list = np.concatenate(acc_list, axis=0)
-    return np.mean(acc_list)
-
-
 if __name__ == '__main__':
     # parser = argparse.ArgumentParser()
     # parser.add_argument('--output-dir', default='./', help='path where to save')
@@ -208,4 +227,4 @@ if __name__ == '__main__':
     #
     # main(arguments)
     # rgr_boost('AIyanxishe_79', 'demo79.rgr.csv')
-    # cls_boost('AIyanxishe_79', 'demo79.cls.csv')
+    cls_boost('AIyanxishe_79', 'demo79.cls.csv')
