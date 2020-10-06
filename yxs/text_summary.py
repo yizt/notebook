@@ -8,6 +8,7 @@
 import re
 
 import jiagu
+import macropodus
 import pandas as pd
 from pyhanlp import *
 from textrank4zh import TextRank4Sentence
@@ -57,6 +58,51 @@ def summary_hanlp(rec):
     return text
 
 
+def summary_macropodus(rec):
+    text = rec['article']
+    try:
+        if text is None or len(text) == 0:
+            print(rec)
+        rst = macropodus.summarization(text, type_summarize='textrank')
+        if len(rst) >= 1:
+            return rst[0][1]
+
+        return text
+    except Exception as e:
+        print(rec)
+        return text
+
+
+def evaluate():
+    from sumeval.metrics.rouge import RougeCalculator
+
+    rouge = RougeCalculator(stopwords=True, lang="zh")
+
+    rouge_1 = rouge.rouge_n(
+        summary="I went to the Mars from my living town.",
+        references="I went to Mars",
+        n=1)
+
+    rouge_2 = rouge.rouge_n(
+        summary="I went to the Mars from my living town.",
+        references=["I went to Mars", "It's my living town"],
+        n=2)
+
+    rouge_l = rouge.rouge_l(
+        summary="I went to the Mars from my living town.",
+        references=["I went to Mars", "It's my living town"])
+
+    # You need spaCy to calculate ROUGE-BE
+
+    rouge_be = rouge.rouge_be(
+        summary="I went to the Mars from my living town.",
+        references=["I went to Mars", "It's my living town"])
+
+    print("ROUGE-1: {}, ROUGE-2: {}, ROUGE-L: {}, ROUGE-BE: {}".format(
+        rouge_1, rouge_2, rouge_l, rouge_be
+    ).replace(", ", "\n"))
+
+
 def main():
     import time
     from pandarallel import pandarallel
@@ -80,8 +126,11 @@ def main():
     # test['summary'] = test.progress_apply(summary_hanlp, axis=1)
     # test[['summary']].to_csv('rst_text_summary.hanlp.csv', header=None)
 
-    test['summary'] = test.progress_apply(summary_text_rank, axis=1)
-    test[['summary']].to_csv('rst_text_summary.text_rank.csv', header=None)
+    # test['summary'] = test.progress_apply(summary_text_rank, axis=1)
+    # test[['summary']].to_csv('rst_text_summary.text_rank.csv', header=None)
+
+    test['summary'] = test.parallel_apply(summary_macropodus, axis=1)
+    test[['summary']].to_csv('rst_text_summary.macropodus.lda.csv', header=None)
 
 
 if __name__ == '__main__':
