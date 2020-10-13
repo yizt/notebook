@@ -35,7 +35,10 @@ def filter_rec(rec):
 
 def summary_jiagu(rec):
     text = rec['article']
-    return jiagu.summarize(text, 1)[0]
+    try:
+        return ''.join(jiagu.summarize(text, 1))
+    except Exception as e:
+        return text
 
 
 def summary_text_rank(rec):
@@ -50,12 +53,14 @@ def summary_text_rank(rec):
 
 def summary_hanlp(rec):
     text = rec['article']
-    if text is None or len(text) == 0:
+    try:
+        rst = list(HanLP.extractSummary(text, 2))
+        if len(rst) >= 1:
+            return ','.join(rst)
+        return text
+    except Exception as e:
         print(rec)
-    rst = list(HanLP.extractSummary(text, 1))
-    if len(rst) >= 1:
-        return rst[0]
-    return text
+        return text
 
 
 def summary_macropodus(rec):
@@ -63,11 +68,13 @@ def summary_macropodus(rec):
     try:
         if text is None or len(text) == 0:
             print(rec)
-        rst = macropodus.summarization(text, type_summarize='textrank')
-        if len(rst) >= 1:
+        rst = macropodus.summarization(text, type_summarize='text_teaser')
+        if len(rst) == 1:
             return rst[0][1]
-
-        return text
+        elif len(rst) > 1:
+            return rst[0][1] + rst[1][1]
+        else:
+            return text
     except Exception as e:
         print(rec)
         return text
@@ -118,19 +125,19 @@ def main():
     print(test.iloc[2815]['article'])
 
     test.to_csv('text_summary_final/test.filter.csv', header=None)
+    print('{} replace done !'.format(time.time()))
 
-    # test['summary'] = test.parallel_apply(summary_jiagu, axis=1)
+    # test['summary'] = test.progress_apply(summary_jiagu, axis=1)
     # test[['summary']].to_csv('rst_text_summary.jiagu.csv', header=None)
 
-    print('{} replace done !'.format(time.time()))
-    # test['summary'] = test.progress_apply(summary_hanlp, axis=1)
-    # test[['summary']].to_csv('rst_text_summary.hanlp.csv', header=None)
+    test['summary'] = test.progress_apply(summary_hanlp, axis=1)
+    test[['summary']].to_csv('rst_text_summary.hanlp.csv', header=None)
 
-    # test['summary'] = test.progress_apply(summary_text_rank, axis=1)
+    # test['summary'] = test.parallel_apply(summary_text_rank, axis=1)
     # test[['summary']].to_csv('rst_text_summary.text_rank.csv', header=None)
 
-    test['summary'] = test.parallel_apply(summary_macropodus, axis=1)
-    test[['summary']].to_csv('rst_text_summary.macropodus.lda.csv', header=None)
+    # test['summary'] = test.progress_apply(summary_macropodus, axis=1)
+    # test[['summary']].to_csv('rst_text_summary.macropodus.tt.csv', header=None)
 
 
 if __name__ == '__main__':
