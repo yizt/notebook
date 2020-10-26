@@ -279,6 +279,12 @@ https://arxiv.org/pdf/1708.02002.pdf
 
 
 
+RefineNet:
+
+https://arxiv.org/pdf/1711.06897.pdf
+
+
+
 ### Cascade R-CNN: Delving into High Quality Object Detection 
 
 https://arxiv.org/abs/1712.00726
@@ -318,9 +324,17 @@ Associative embedding: End-to-end learning for joint detection and grouping:<htt
 
 
 
-### ExtremeNet 
+### ExtremeNet：Bottom-up Object Detection by Grouping Extreme and Center Points 
+
+https://arxiv.org/abs/1901.08043.pdf
 
 
+
+近两年来，有很多基于关键点预测的目标检测方法，比如CornerNet（在我的专栏中也有详细解读），通过预测左上角和右下角的角点，构成bounding box。在角点分类的方法上，借鉴了人体姿态估计的方法，进行向量嵌入进行分组。与CornerNet相比，本文提出的方法有两大不同：**关键点的定义和分组方式**。角点是bounding box的一种特殊形式，比如CornerNet，知道左上角和右下角的点后就形成了一个bounding box。再比如CenterNet，在CornerNet的基础上加了一个中间点，利用三个点形成一个bounding box。但是这种bounding box的生成方式是有**缺陷**的，因为这种点通常**在真正物体的外部**，并**没有很强的外观特征**，甚至说，它本不应该属于物体，只是因为我们要用bounding box表示而已。但是本文提出的**极值点是位于物体上的**，因此**在视觉上是可区分的**，具有**一致的局部外观特征**。
+
+
+
+性能：相同backbone和分辨率情况下小幅优于CornerNet
 
 ### FCOS
 
@@ -400,6 +414,16 @@ https://arxiv.org/pdf/1904.07850.pdf
 ### CSPNet: A New Backbone that can Enhance Learning Capability of CNN
 
 <https://arxiv.org/pdf/1911.11929.pdf>
+
+
+
+
+
+## 小目标检测
+
+### HRDNet: High-resolution Detection Network for Small Objects
+
+https://arxiv.org/pdf/2006.07607.pdf
 
 
 
@@ -1313,10 +1337,6 @@ affinity score ：相邻两个字符的中心概率
 
 
 
-### Convolutional Character Networks
-
-<https://arxiv.org/pdf/1910.07954.pdf>
-
 
 
 ### DB:Real-time Scene Text Detection with Differentiable Binarization
@@ -1507,11 +1527,7 @@ ACE包括三个简单步骤
 
  
 
-## ABCNet：Real-time Scene Text Spotting with Adaptive Bezier-Curve Network
 
-<https://arxiv.org/pdf/2002.10200.pdf>
-
- 引用数：4
 
 
 
@@ -1549,6 +1565,12 @@ https://arxiv.org/pdf/1811.08611.pdf
 
 
 
+### TextDragon: An End-to-End Framework for Arbitrary Shaped Text Spotting
+
+<https://openaccess.thecvf.com/content_ICCV_2019/papers/Feng_TextDragon_An_End-to-End_Framework_for_Arbitrary_Shaped_Text_Spotting_ICCV_2019_paper.pdf>
+
+
+
 ### You Only Recognize Once: Towards Fast Video Text Spotting
 
 <https://arxiv.org/pdf/1903.03299.pdf>
@@ -1562,6 +1584,8 @@ https://arxiv.org/pdf/1811.08611.pdf
 <https://arxiv.org/pdf/1907.09653.pdf>
 
 引用数：2 
+
+
 
 
 
@@ -1587,9 +1611,31 @@ https://arxiv.org/pdf/1811.08611.pdf
 
 
 
+
+
+### Convolutional Character Networks
+
+<https://arxiv.org/pdf/1910.07954.pdf>
+
+
+
+### ABCNet：Real-time Scene Text Spotting with Adaptive Bezier-Curve Network
+
+<https://arxiv.org/pdf/2002.10200.pdf>
+
+ 引用数：4
+
+
+
 ### Mask TextSpotter v3: Segmentation Proposal Network for Robust Scene Text Spotting
 
 <https://arxiv.org/pdf/2007.09482.pdf>
+
+
+
+### Text Recognition in the Wild: A Survey
+
+<https://arxiv.org/pdf/2005.03492v1.pdf>
 
 
 
@@ -1624,6 +1670,65 @@ https://github.com/timcanby/collector-s_seal-ImageProcessing.git
 
 
 <https://arxiv.org/pdf/1707.00800.pdf>
+
+
+
+## ocr/图像合成
+
+
+
+### Synthetic Data and Artificial Neural Networks for Natural Scene Text Recognition 
+
+
+
+### Synthetic Data for Text Localisation in Natural Images
+
+https://arxiv.org/pdf/1604.06646.pdf
+
+
+
+### Verisimilar image synthesis for accurate detection and recognition of texts in scenes 
+
+在计算机图形学研究中，以逼真方式将对象插入图像中已被广泛研究为图像合成的一种手段[7]。 目标是通过控制物体的尺寸，物体的视角（或方向），环境照明等来实现插入的逼真度，即合成图像的真实相似度。 [8]开发了一种半自动技术，该技术可将物体插入具有真实感照明和透视效果的旧照片中。
+
+近年来，当只有有限数量的带注释的图像可用时，图像合成已被研究为一种数据增强方法，用于训练准确而健壮的DNN模型。 例如，Jaderberg等。 [9]创建一个单词生成器，并使用合成图像来训练文本识别网络。
+
+8 Karsch, K., Hedau, V., Forsyth, D., Hoiem, D.: Rendering synthetic objects into legacy photographs. ACM Transactions on Graphics (6) (2011) 157:1–157:12 
+
+9 Jaderberg, M., Simonyan, K., Vedaldi, A., Zisserman, A.: Synthetic data and artificial neural networks for natural scene text recognition. arXiv preprint arXiv:1406.2227 (2014) 
+
+
+
+### Spatial Fusion GAN for Image Synthesis
+
+https://arxiv.org/pdf/1812.05840.pdf
+
+
+
+### Generating Text Sequence Images for Recognition
+
+https://arxiv.org/pdf/1901.06782.pdf
+
+Jaderberg等人[1，5]提出的方法是基于字体目录的。
+对通过字体,边框和阴影渲染合成的文字图像进行着色和投影形变，然后将经过处理的图像添加到具有某些噪声的背景场景图像中。 Gupta等人[6]提出首先在场景图像上应用语义分割。然后将处理后的单词图像粘贴到其连续区域上，以确保单词不会出现在不同距离的对象上。基于[6]，Zhan等人[7]提出了一种实现语义连贯综合的方法。通过利用在先前的语义分割研究中创建的对象和图像区域的语义注释，在合成文本图像时已经达到了文本和背景之间的语义一致性。这些方法是有效的，但通常需要复杂的先前或后续步骤，例如收集背景图像，对单词进行着色和添加噪声以提高鲁棒性，这需要更多的手动工程。
+
+
+
+## OCR/其它
+
+### Separating Content from Style Using Adversarial Learning for Recognizing Text in the Wild
+
+https://arxiv.org/pdf/2001.04189.pdf
+
+
+
+
+
+## Image Dewarping
+
+### RectiNet:A Gated and Bifurcated Stacked U-Net Module for Document Image Dewarping
+
+https://arxiv.org/pdf/2007.09824.pdf
 
 
 
