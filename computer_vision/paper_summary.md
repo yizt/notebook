@@ -273,15 +273,31 @@ https://arxiv.org/pdf/1909.03625.pdf
 
 
 
-### Retinanet
+### Retinanet：Focal Loss for Dense Object Detection
 
 https://arxiv.org/pdf/1708.02002.pdf
 
+引用数：4760
 
 
-RefineNet:
+
+### RefineNet: Single-Shot Refifinement Neural Network for Object Detection 
 
 https://arxiv.org/pdf/1711.06897.pdf
+
+引用数：504
+
+两阶段网络精度高，单阶段网络速度快，RefineNet继承两者优点同时克服两者缺点，精度优于两阶段同时计算量与单阶段相当。
+
+我们认为两阶段相对于一阶段有三个优点：
+
+a) 处理类别不平衡
+
+b) 级联回归边框参数
+
+c) 两阶段特征描述对象（RPN:二分类，RCNN：多分类）
+
+通过两个内联的模块：anchor refifinement module (ARM)和 object detect module(ODM)
 
 
 
@@ -300,6 +316,8 @@ https://arxiv.org/pdf/1906.09756v1.pdf
 ### CornerNet: Detecting Objects as Paired Keypoints 
 
 https://arxiv.org/pdf/1808.01244.pdf
+
+引用数：582
 
 将检测对象边框变为检测一对关键点(左上角和右下角)；提出corner池化，更好的定位边框的角；
 
