@@ -75,6 +75,7 @@ def main(args):
         warmup_steps=500,  # number of warmup steps for learning rate scheduler
         weight_decay=0.01,  # strength of weight decay
         logging_dir='./logs',  # directory for storing logs
+        learning_rate=2e-5,
         logging_steps=10,
     )
 

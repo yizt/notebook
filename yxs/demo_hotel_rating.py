@@ -26,7 +26,6 @@ def main(csv_path):
     optimizer = AdamW(optimizer_grouped_parameters, lr=1e-5)
 
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    tokenizer.to(device)
     train_data = pd.read_csv(csv_path, sep=',')
     review_np = train_data['review'].values
     rating_np = train_data['rating'].values.astype(np.int32) - 1  # 从0开始
