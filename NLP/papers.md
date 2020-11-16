@@ -170,6 +170,10 @@ B) 在Pretrain部分基本与GPT方法相同，在Fine-tune部分把第二阶段
 
 [从word2vec开始，说下GPT庞大的家族系谱 ](https://www.sohu.com/a/422574962_129720?spm=smpc.author.fd-d.2.1602467430132AR5RYY0)
 
+[按照时间线帮你梳理10种预训练模型](https://mp.weixin.qq.com/s/vQ0LVG6X0Zqy19yC1lqxoQ)
+
+https://jalammar.github.io/illustrated-transformer/
+
 
 
 ### GPT与BERT区别
@@ -180,4 +184,36 @@ GPT的单向语言模型采用decoder部分，decoder的部分见到的都是不
 
  
 
+### Character-Level Language Modeling with Deeper Self-Attention
+
+https://arxiv.org/pdf/1808.04444.pdf
+
+1. 使用**causal attention**将当前词后面的词mask掉。causal attention其实与transformer的decode部分中的masked attention是一样
+2. **中间层的auxiliary losses** 除了在transformer的最上层进行下一个词的预测以外，我们在transformer的每个中间层也进行了下一个词的预测，这样中间层的每个位置都会有对应的损失函数，就叫做中间层的auxiliary losses
+3. **Multiple Targets的auxiliary losses** 在序列中的每个位置，模型对下一个字符进行两次（或更多次）预测。对每次预测我们使用不同的分类器，这样我们对transformer的每一层的每个位置都会产出两个或多个损失函数，选择一共作为主要损失，其他的都称为字符辅助损失。
+
+
+
+### Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context
+
+https://arxiv.org/pdf/1901.02860.pdf
+
+Transformer 是 Google 提出的一种先进的 NLP 模型，在很多任务上都取得比传统 RNN 更好的效果。Transformer 使用了 Self-Attention 机制，让单词之间可以直接建立联系，因此编码信息和学习特征的能力比 RNN 强。但是 Transformer 在学习**长距离依赖信息**的能力仍然有一些限制，Transformer-XL 是一种语言模型，可以提高 Transformer 学习长期依赖信息的能力。
+
+
+
+**vanilla Transformer 的缺点**
+
+长期依赖受限：vanilla Transformer 将数据分段进行训练，每个 segment 中单词能得到的依赖关系限制在本这个 segment 中，无法使用长期依赖的信息。
+
+分段数据语义不完整：vanilla Transformer 将数据分段的时候，是直接按照固定的长度划分语料库里面的句子，而不考虑句子的边界，使得分割出来的 segment 语义不完整。也就是说会将一个句子分到两个 segment 里面。
+
+评估时候速度慢：在评估模型时，每预测一个单词，都要将该单词的上文重新计算一次，效率低下。
+
  
+
+**Transformer-XL 主要有两个创新点：**
+
+第一、提出了 Segment-Level Recurrence，在 Transformer 中引入了循环机制，在训练当前 segment 的时候，会保存并**使用上一个 segment 每一层的输出向量**。这样就可以利用到之前 segment 的信息，提高 Transformer 长期依赖的能力，在训练时**前一个 segment 的输出只参与前向计算**，而**不用进行反向传播**。
+
+第二、提出 Relative Positional Encodings，Transformer 为了表示每一个单词的位置，会在单词的 Embedding 中加入位置 Embedding，位置 Embedding 可以用三角函数计算或者学习得到。但是在 Transformer-XL 中不能使用这种方法，因为每一个 segment 都会存在相同位置的 Embedding，这样两个 segment 中同样位置的 Embedding 是一样的。因此 Transformer-XL 提出了一种新的位置编码方式，**相对位置编码** (Relative Positional Encodings)。
