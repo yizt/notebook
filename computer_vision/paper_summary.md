@@ -311,7 +311,23 @@ https://arxiv.org/abs/1712.00726
 
 https://arxiv.org/pdf/1906.09756v1.pdf
 
- 
+
+
+
+
+### PLN:Point Linking Network for Object Detection 
+
+ https://arxiv.org/pdf/1706.03646.pdf
+
+
+
+不同于以往将边框看做一个整体，我们使用顶点(points)和连接(links)来表示边框；
+
+优点：对于遮挡、尺寸变换、长宽比变化 更加鲁棒
+
+
+
+
 
 ### CornerNet: Detecting Objects as Paired Keypoints 
 
@@ -330,7 +346,7 @@ https://arxiv.org/pdf/1808.01244.pdf
 
 为什么corner方式优于边框中心？推测边框中心更难定位，依赖4个边；二corner只依赖两个边；
 
-为什么corner方式由于anchor框？wh个corner可以代表${w^2h^2}$个anchor 边框；是一个更加有效的离散表示
+为什么corner方式优于anchor框？wh个corner可以代表${w^2h^2}$个anchor 边框；是一个更加有效的离散表示
 
 
 
