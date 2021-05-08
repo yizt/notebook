@@ -52,7 +52,7 @@ def rename_file(dir_path, length=3):
 
 
 def main():
-    dir_path = '/Volumes/Elements/土方智能工厂/棋盘格/'
+    dir_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准'
     down_scale_image_dir(dir_path, 800)
     rename_file(dir_path)
 
