@@ -5,6 +5,7 @@
  @Author  : yizuotian
  @Description    :
 """
+import math
 import os
 
 import cv2
@@ -104,19 +105,32 @@ def deal_one_image(im_path):
     new_mask = np.zeros_like(mask_all, np.uint8)
     new_mask = cv2.fillConvexPoly(new_mask, contours[max_area_idx], 255)
 
-    # 画直线
+    # 直线检测
     minLineLength = 100
     maxLineGap = 20
     lines = cv2.HoughLinesP(get_binary(new_mask), 1, np.pi / 180, 60, minLineLength, maxLineGap)
-    for line in lines:
-        x1, y1, x2, y2 = line[0]
-        cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
     # 最小外接矩形
     rect = cv2.minAreaRect(contours[max_area_idx])
     box = cv2.boxPoints(rect)
     box = np.int0(box)
-    cv2.drawContours(img, [box], 0, (0, 0, 255), 1)
+    # print(box,im_path)
+    cv2.drawContours(img, [box], 0, (0, 255, 255), 2)
+
+    # 画最终的角度
+    angle, valid_flags = get_angle(box, lines)
+    dx = np.cos(angle * np.pi/180)
+    dy = np.sin(angle * np.pi/180)
+    h, w = img.shape[:2]
+    cv2.line(img, (w // 2, h // 2), (int(w / 2 + dx * w / 6), int(h / 2 + dy * h / 6)), (255, 0, 0), 2)
+
+    # 画直线
+    for line, valid in zip(lines, valid_flags):
+        x1, y1, x2, y2 = line[0]
+        if valid:
+            cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        else:
+            cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
     # 拼接图像
     zero_im = np.zeros_like(img)
@@ -126,6 +140,81 @@ def deal_one_image(im_path):
                             axis=1)
 
     return out_im
+
+
+def get_angle(rect_pts, lines):
+    """
+    根据
+    :param rect_pts: 矩形框顶点坐标[4,(x,y)]
+    :param lines: 检测的直线[N,(x,y)]
+    :return:
+    """
+
+    def _get_angle(p1_y, p1_x, p2_y, p2_x):
+        if p2_y - p1_y > 0:
+            return math.atan2(p2_y - p1_y, p2_x - p1_x) * 180 / math.pi
+        return math.atan2(p1_y - p2_y, p1_x - p2_x) * 180 / math.pi
+
+    # 矩形坐标
+    p1, p2, p3, p4 = rect_pts
+    angles = [_get_angle(p1[1], p1[0], p2[1], p2[0]),
+              _get_angle(p3[1], p3[0], p2[1], p2[0])]
+    angles = [angle if angle >= 0 else angle + 180 for angle in angles]
+    a1, a2 = angles
+    # rect_angle = min(a1, a2)
+    # print(a1, a2)
+    l1 = np.sqrt(np.square(p1[1] - p2[1]) + np.square(p1[0] - p2[0]))
+    l2 = np.sqrt(np.square(p3[1] - p2[1]) + np.square(p3[0] - p2[0]))
+    rect_angle = a1 if l1 >= l2 else a2
+    rect_normal_line_angle = a2 if l1 >= l2 else a1  # 法线角度
+
+    # 直线的角度
+    lines_angle = []
+    for line in lines:
+        x1, y1, x2, y2 = line[0]
+        angle = _get_angle(y1, x1, y2, x2)
+        lines_angle.append(angle)
+
+    # 直线与矩形框的角度差
+    deltas = [min(np.abs(angle - a1), np.abs(angle - a2)) for angle in lines_angle]
+    # 过滤掉过大的角度差
+    mean_delta = np.mean(deltas)
+    valid_lines_angle = [angle for delta, angle in zip(deltas, lines_angle) if delta < mean_delta and delta < 15]
+    valid_flags = [delta < mean_delta for delta, angle in zip(deltas, lines_angle)]
+
+    # 有效直线的平均角度
+    delta_sum = 0
+    for angle in valid_lines_angle:
+        if np.abs(angle - rect_angle) <= np.abs(angle - rect_normal_line_angle):
+            delta_sum += (angle - rect_angle)
+        else:
+            delta_sum += (angle - rect_normal_line_angle)
+
+    if len(valid_lines_angle) > 0:
+        print(delta_sum / len(valid_lines_angle))
+        return rect_angle + delta_sum / len(valid_lines_angle), valid_flags
+    return rect_angle, valid_flags
+
+
+def azimuth_angle(x1, y1, x2, y2):
+    angle = 0.0
+    dx = x2 - x1
+    dy = y2 - y1
+    if x2 == x1:
+        angle = math.pi / 2.0
+        if y2 == y1:
+            angle = 0.0
+        elif y2 < y1:
+            angle = 3.0 * math.pi / 2.0
+    elif x2 > x1 and y2 > y1:
+        angle = math.atan(dx / dy)
+    elif x2 > x1 and y2 < y1:
+        angle = math.pi / 2 + math.atan(-dy / dx)
+    elif x2 < x1 and y2 < y1:
+        angle = math.pi + math.atan(dx / dy)
+    elif x2 < x1 and y2 > y1:
+        angle = 3.0 * math.pi / 2.0 + math.atan(dy / -dx)
+    return angle * 180 / math.pi
 
 
 def deal_dir(im_dir, out_dir):
