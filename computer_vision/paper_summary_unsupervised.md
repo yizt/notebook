@@ -64,9 +64,12 @@ we take two random “views” of the same image under random data augmentation 
 
 <https://arxiv.org/pdf/2002.05709.pdf>
 
+无监督学习视觉表征有两类方法；a) 生成式：生成或建模输入空间,缺点：像素级计算量大；b)判别式，类似监督学习，不过输入和标签都来自未标注数据；关键是如何构建模拟监督任务。
+
 1. 组合数据增广
 2. 在表征和对比损失之间加入非线性变换
-3. 大的Batch-Size
+3. 对比交叉熵受益于biao'zhun
+4. 大的Batch-Size
 
 
 

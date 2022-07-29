@@ -10,9 +10,15 @@ DualGAN: Unsupervised dual learning for image-to-image translation
 
 Unsupervised image-to- image translation networks
 
+### DCGAN: UNSUPERVISED REPRESENTATION LEARNING WITH DEEP CONVOLUTIONAL GENERATIVE ADVERSARIAL NETWORKS
+
+https://arxiv.org/pdf/1511.06434.pdf	
+
+三个关键点使得网络可以稳定训练
 
 
-### pix2pix Image-to-Image Translation with Conditional Adversarial Networks
+
+### pix2pix: Image-to-Image Translation with Conditional Adversarial Networks
 
  <https://arxiv.org/pdf/1611.07004.pdf>
 
@@ -46,15 +52,15 @@ PatchGAN判别器：This discriminator tries to classify if each N × N patch in
 
 
 
-### StyleGAN:A Style-Based Generator Architecture for Generative Adversarial Networks
-
-<https://arxiv.org/pdf/1812.04948.pdf>
-
-
-
 ### BigGAN:Large Scale GAN Training for High Fidelity Natural Image Synthesis
 
 <https://arxiv.org/pdf/1809.11096.pdf>
+
+
+
+### StyleGAN:A Style-Based Generator Architecture for Generative Adversarial Networks
+
+<https://arxiv.org/pdf/1812.04948.pdf>
 
 
 
