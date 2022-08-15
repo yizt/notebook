@@ -37,7 +37,7 @@ def video2images(file_path, output_path):
         if frame is None:
             continue
         image_path = os.path.join(output_path, '{:03d}.jpg'.format(i))
-        cv2.imwrite(frame, image_path)
+        cv2.imwrite(image_path, frame)
         i += 1
 
     cap.release()
@@ -87,4 +87,6 @@ def test_camera_show():
 
 if __name__ == '__main__':
     # cv_show('./data/Abuse011_x264.mp4')
-    cv_show(r'D:\pyspace\py_data_mining\anomaly-detection\tmp\predict-Abuse005_x264.mp4')
+    # cv_show(r'D:\pyspace\py_data_mining\anomaly-detection\tmp\predict-Abuse005_x264.mp4')
+    video2images('/Users/yizuotian/zoomlion/demo_material/video_20200318_102620.mp4',
+                 '/Users/yizuotian/zoomlion/demo_material/video_20200318_102620_pic')

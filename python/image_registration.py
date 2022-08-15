@@ -15,6 +15,9 @@ import numpy as np
 
 def find_correspondence_points(img1, img2):
     sift = cv2.xfeatures2d.SIFT_create()
+    # sift = cv2.AKAZE_create()
+    # sift = cv2.xfeatures2d.SURF_create(400)
+    # sift = cv2.ORB_create()
 
     # find the keypoints and descriptors with SIFT
     kp1, des1 = sift.detectAndCompute(
@@ -27,7 +30,13 @@ def find_correspondence_points(img1, img2):
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)
     flann = cv2.FlannBasedMatcher(index_params, search_params)
-    matches = flann.knnMatch(des1, des2, k=2)
+
+    # flann = cv2.BFMatcher() # orb匹配
+    matches = flann.knnMatch(des1,
+                             des2, k=2)
+
+    # matches = bf.match(des1, des2)
+    # matches = sorted(matches, key=lambda x: x.distance)
 
     # Apply Lowe's SIFT matching ratio test
     good = []
@@ -40,7 +49,7 @@ def find_correspondence_points(img1, img2):
 
     # Constrain matches to fit homography
     retval, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,
-                                      ransacReprojThreshold=5
+                                      ransacReprojThreshold=20
                                       )
     mask = mask.ravel()
 
@@ -89,6 +98,7 @@ def deal_im(src_pts, im_template, im):
     """
     # 查找匹配点，获取透视变换矩阵
     _, _, matrix = find_correspondence_points(im_template, im)
+    # print(matrix)
     dst_pts = perspective_transform(src_pts, matrix)
 
     h, w = im.shape[:2]
@@ -169,6 +179,7 @@ def deal_im_valve(src_pts, im_template, im, colors):
     """
     # 查找匹配点，获取透视变换矩阵
     _, _, matrix = find_correspondence_points(im_template, im)
+    # print(matrix)
     dst_pts = perspective_transform(src_pts.reshape(-1, 2), matrix)
     dst_pts = dst_pts.reshape(-1, 4, 2)
     im_draw = draw_boxes(im, dst_pts, colors)
@@ -176,10 +187,13 @@ def deal_im_valve(src_pts, im_template, im, colors):
 
 
 def valve_main():
-    template_im_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/template.jpg'
-    src_im_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准'
-    out_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准_output_compare'
-    json_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/main_valve.json'
+    template_im_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/template/02.jpg'
+    # src_im_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准'
+    # out_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准_output_orb'
+
+    src_im_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/ggg/1200_20-60'
+    out_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/rgt_out/1200_20-60'
+    json_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/template/main_valve2.json'
 
     pts = parse_file(json_path)
     colors = random_colors(len(pts))
@@ -194,6 +208,13 @@ def valve_main():
         im_out = deal_im_valve(pts, im_template, im, colors)
         cv2.imwrite(out_path, im_out)
 
+    # 模板图像展示
+    img = draw_boxes(im_template,
+                     pts.reshape(-1, 4, 2).astype(np.int32),
+                     colors)
+    out_path = os.path.join(out_dir, 'template.jpg')
+    cv2.imwrite(out_path, img)
+
 
 def valve_main_2():
     template_im_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/template.jpg'
@@ -201,7 +222,7 @@ def valve_main_2():
     out_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准_output_2'
     json_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/main_valve.json'
 
-    pts = parse_file(json_path).reshape(-1,2)
+    pts = parse_file(json_path).reshape(-1, 2)
 
     im_template = cv2.imread(template_im_path)
     for im_name in os.listdir(src_im_dir):
