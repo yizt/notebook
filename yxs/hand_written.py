@@ -20,6 +20,7 @@ from adet.config import get_cfg
 from detectron2.data.detection_utils import read_image
 from detectron2.utils.logger import setup_logger
 from predictor import VisualizationDemo
+from keras.preprocessing.image import img_to_array
 
 # constants
 WINDOW_NAME = "COCO detections"
@@ -104,20 +105,20 @@ def get_parser():
 if __name__ == "__main__":
     """
     Usage:
-    export CUDA_DEVICE_ORDER="PCI_BUS_ID"
-    export CUDA_VISIBLE_DEVICES="1"
-    
-    
-    python demo/hand_written.py --config-file configs/BAText/TotalText/attn_R_50.yaml \
-    --input /home/mydir/dataset/handWriting/test \
-    --output /home/mydir/dataset/handWriting/test.vis \
-    --confidence-threshold 0.4 \
-    --opts MODEL.WEIGHTS /home/mydir/pretrained_model/tt_attn_R_50.pth \
-    MODEL.FCOS.NMS_TH 0.05 INPUT.MIN_SIZE_TEST 200 INPUT.MAX_SIZE_TEST 400 
+export CUDA_DEVICE_ORDER="PCI_BUS_ID"
+export CUDA_VISIBLE_DEVICES="1"
+
+cd /home/mydir/pyspace/AdelaiDet
+python demo/hand_written.py --config-file configs/BAText/TotalText/attn_R_50.yaml \
+--input /home/mydir/dataset/handWriting/test \
+--output /home/mydir/dataset/handWriting/test.vis \
+--confidence-threshold 0.4 \
+--opts MODEL.WEIGHTS /home/mydir/pretrained_model/tt_attn_R_50.pth \
+MODEL.FCOS.NMS_TH 0.05 INPUT.MIN_SIZE_TEST 200 INPUT.MAX_SIZE_TEST 400 
     
     scp -rp hand_written.py root@m2:/home/mydir/pyspace/AdelaiDet/demo/
     
-    scp -rp root@m2:/home/mydir/pyspace/AdelaiDet/handwritten.csv ./
+    scp -rp root@m2:/home/mydir/pyspace/AdelaiDet/key.csv ./
     """
     mp.set_start_method("spawn", force=True)
     args = get_parser().parse_args()
@@ -135,7 +136,8 @@ if __name__ == "__main__":
         elif len(args.input) == 1:
             args.input = glob.glob(os.path.expanduser(args.input[0]))
             assert args.input, "The input path(s) was not found"
-        with codecs.open('./handwritten.csv', mode='w', encoding='utf-8') as w:
+        with codecs.open('./key.csv', mode='w', encoding='utf-8-sig') as w:
+            # w.write(codecs.BOM_UTF8)
             for path in tqdm.tqdm(args.input, disable=not args.output):
                 # use PIL, to be consistent with evaluation
                 img = read_image(path, format="BGR")
@@ -154,12 +156,12 @@ if __name__ == "__main__":
                 xs = [bezier_to_poly(bezier)[0, 0] for bezier in beziers]
 
                 texts_xs = [(text, x) for text, x in zip(texts, xs)
-                            if not text.endswith('NOM')]
+                            if not text.endswith('NOM') and not text == 'NOME']
                 texts = [text.upper() for text, x in sorted(texts_xs, key=lambda text_x: text_x[1])]
                 logger.info(texts)
 
                 file_prefix = os.path.splitext(os.path.basename(path))[0]
-
+                texts = ['DEFAULT'] if len(texts) == 0 else texts
                 w.write('{},{}\n'.format(file_prefix, ' '.join(texts)))
 
                 if args.output:

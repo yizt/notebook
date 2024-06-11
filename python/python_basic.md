@@ -74,10 +74,12 @@ trusted-host = pypi.douban.com
 
 pip迁移
 
-```
+```python
 pip freeze > requirements.txt
 
 pip install -r requirements.txt
+
+pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 ```
 
@@ -90,6 +92,19 @@ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/f
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
 conda config --set show_channel_urls yes
 ```
+
+
+
+```shell
+conda create -n sift python=3.6
+pip install opencv-python==3.4.2.16
+pip install opencv-contrib-python==3.4.2.16
+conda create -n llm python=3.8
+conda create -n yizt_py38 python=3.8
+conda create -n ak python=3.8.5
+```
+
+
 
 
 

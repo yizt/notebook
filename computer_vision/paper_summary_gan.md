@@ -16,15 +16,23 @@ https://arxiv.org/pdf/1511.06434.pdf
 
 三个关键点使得网络可以稳定训练
 
+1、步长卷积替代池化层，让网络自己学习空间下采样
+
+2、去除全连接层，直接使用Conv；因为全连接要全局平均池化GAP,GAP会使用收敛变慢；判别器的输出层打平后直接Sigmod激活判断
+
+3、使用BN，但是在生成器的输出层和判别器的输入层不使用BN
+
+4、生成器使用ReLU,输出层使用Tanh
+
+5、判别器使用LeakyReLU
+
 
 
 ### pix2pix: Image-to-Image Translation with Conditional Adversarial Networks
 
  <https://arxiv.org/pdf/1611.07004.pdf>
 
-
-
-欧氏距离会生成模糊照片，；
+欧氏距离会生成模糊照片；
 
 仅仅指定high-level的目标（与真实照片不可分辨）
 

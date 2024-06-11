@@ -10,7 +10,7 @@ import os
 import cv2
 from bokeh.io import output_notebook, show, push_notebook
 from bokeh.plotting import figure
-
+import numpy as np
 
 def cv_show(file_path):
     cap = cv2.VideoCapture(file_path)
@@ -42,6 +42,36 @@ def video2images(file_path, output_path):
 
     cap.release()
     cv2.destroyAllWindows()
+
+
+def video_concat(video_path_list,out_path,axis=1):
+    """
+    拼接视频，假定视频宽高一致
+    :param video_path_list:
+    :param out_path:
+    :param axis:
+    :return:
+    """
+    caps = [cv2.VideoCapture(path) for path in video_path_list ]
+    h = int(caps[0].get(cv2.CAP_PROP_FRAME_HEIGHT))
+    w = int(caps[0].get(cv2.CAP_PROP_FRAME_WIDTH))
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    writer = cv2.VideoWriter()
+    writer.open(out_path, fourcc, 25, (w*len(caps), h), True)
+    flag = True
+    i = 0
+    while flag and np.alltrue([cap.isOpened() for cap in caps]):
+        frames = []
+        for cap in caps:
+            cur_flag, frame = cap.read()
+            if frame is None:
+                continue
+            flag = flag and cur_flag
+            frames.append(frame)
+        writer.write(np.concatenate(frames, axis=axis))
+    for cap in caps:
+        cap.release()
+    writer.release()
 
 
 class VideoShowInNotebook(object):
@@ -88,5 +118,8 @@ def test_camera_show():
 if __name__ == '__main__':
     # cv_show('./data/Abuse011_x264.mp4')
     # cv_show(r'D:\pyspace\py_data_mining\anomaly-detection\tmp\predict-Abuse005_x264.mp4')
-    video2images('/Users/yizuotian/zoomlion/demo_material/video_20200318_102620.mp4',
-                 '/Users/yizuotian/zoomlion/demo_material/video_20200318_102620_pic')
+    # video2images('/Users/yizuotian/zoomlion/demo_material/video_20200318_102620.mp4',
+    #              '/Users/yizuotian/zoomlion/demo_material/video_20200318_102620_pic')
+    video_concat(['/Users/yizuotian/cspace/mix_station_embeded/output.mp4',
+                  '/Users/yizuotian/cspace/mix_station_embeded/output-2.mp4'],
+                 '/Users/yizuotian/cspace/mix_station_embeded/output-compare.mp4')

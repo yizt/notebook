@@ -14,7 +14,7 @@ import pandas as pd
 import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
-from transformers import BertForSequenceClassification
+from transformers import BertForSequenceClassification,GPT2ForSequenceClassification,AutoModelForSequenceClassification
 from transformers import BertTokenizer, TrainingArguments, Trainer
 
 
@@ -64,6 +64,7 @@ def main(args):
 
     #
     # device = torch.device('cuda:5')
+    # BertForSequenceClassification.from_pretrained()
     model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=5)
     # model.to(device)
 

@@ -40,6 +40,18 @@ def down_scale_image_dir(dir_path, im_size):
         cv2.imwrite(im_path, new_im)
 
 
+def bmp_to_jpg(dir_path):
+    for im_name in os.listdir(dir_path):
+        if im_name.lower().endswith('bmp'):
+            print('deal {}'.format(im_name))
+            im_path = os.path.join(dir_path, im_name)
+            im = cv2.imread(im_path)
+            im_name = os.path.splitext(im_name)[0]
+            dst_im_path = os.path.join(dir_path, '{}.jpg'.format(im_name))
+            cv2.imwrite(dst_im_path, im)
+            os.remove(im_path)
+
+
 def rename_file(dir_path, length=3):
     for i, im_name in enumerate(os.listdir(dir_path)):
         print('deal {}'.format(im_name))
@@ -52,8 +64,9 @@ def rename_file(dir_path, length=3):
 
 
 def main():
-    dir_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准'
-    down_scale_image_dir(dir_path, 800)
+    dir_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/ggg/1200_20-60'
+    # bmp_to_jpg(dir_path)
+    # down_scale_image_dir(dir_path, 800)
     rename_file(dir_path)
 
 

@@ -63,6 +63,10 @@ docker run -it --gpus all --net host -v /home/mydir:/home/mydir --name torch1.4 
 
 docker run -it --gpus all --net host -v /home/mydir:/home/mydir --name torch1.4.adelaidet torch1.4:adelaidet /bin/bash
 
+docker run -it --gpus all --net host -v /home/mydir:/home/mydir --name torch1.4.adelaidet --shm-size 8G torch1.4:v2 /bin/bash
+
+
+
 docker run -it --gpus all --net host -v /home/mydir:/home/mydir --name torch1.5 pytorch/pytorch:1.5.1-cuda10.1-cudnn7-devel /bin/bash
 
 

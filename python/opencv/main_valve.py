@@ -34,7 +34,9 @@ def color_mask(hsv, gray, color):
     h, s, v = hsv[:, :, 0], hsv[:, :, 1], hsv[:, :, 2]
 
     if color == 'gray':
-        return np.logical_and(np.logical_and(v <= 220, gray <= 150),
+        # return np.logical_and(np.logical_and(v <= 220, gray <= 150),
+        #                       np.logical_and(s <= 43, v >= 46))
+        return np.logical_and(np.logical_and(v <= 220, gray <= 50),
                               np.logical_and(s <= 43, v >= 46))
     elif color == 'white':
         return np.logical_and(s <= 30, v >= 221)
@@ -78,6 +80,81 @@ def get_all_color_mask(im_bgr):
 
 
 def deal_one_image(im_path):
+    print(im_path)
+    im = cv2.imdecode(np.fromfile(im_path, np.uint8), cv2.IMREAD_COLOR)
+    # im = cv2.resize(im, (250, 250))
+    img = im.copy()
+    # 颜色区域提取
+    mask = np.stack(list(get_all_color_mask(im).values()), axis=0).astype(np.uint32)
+    mask_all = np.sum(mask, axis=0)
+    mask_all = (mask_all == 0).astype(np.uint8) * 255
+    # mask_all = get_all_color_mask(im)['white'].astype(np.uint8) * 255
+    # print(np.min(mask_all))
+    # Image.fromarray(mask_all)
+    # 开区间
+    open = cv2.morphologyEx(mask_all, cv2.MORPH_OPEN, kernel=np.ones((3, 3)), iterations=3)
+    # Image.fromarray(open)
+
+    # 取最大连通域
+    # _,
+    _, contours, hierarchy = cv2.findContours((open).astype(np.uint8), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    max_area_idx = -1
+    max_area = 0
+    for i, contour in enumerate(contours):
+        area = cv2.contourArea(contour)
+        if area > max_area:
+            max_area_idx = i
+            max_area = area
+
+    if max_area_idx == -1:
+        return im
+    new_mask = np.zeros_like(mask_all, np.uint8)
+    new_mask = cv2.fillConvexPoly(new_mask, contours[max_area_idx], 255)
+
+    # 直线检测
+    minLineLength = 100
+    maxLineGap = 20
+    lines = cv2.HoughLinesP(get_binary(new_mask), 1, np.pi / 180, 60, minLineLength, maxLineGap)
+
+    # 最小外接矩形
+    rect = cv2.minAreaRect(contours[max_area_idx])
+    box = cv2.boxPoints(rect)
+    box = np.int0(box)
+    # print(box,im_path)
+    cv2.drawContours(img, [box], 0, (0, 255, 255), 2)
+
+    # 画最终的角度
+    if lines is not None and len(lines) > 0:
+        angle, valid_flags = get_angle(box, lines)
+        dx = np.cos(angle * np.pi / 180)
+        dy = np.sin(angle * np.pi / 180)
+        h, w = img.shape[:2]
+        cv2.line(img, (w // 2, h // 2), (int(w / 2 + dx * w / 6), int(h / 2 + dy * h / 6)), (255, 0, 0), 2)
+
+        # 画直线
+        for line, valid in zip(lines, valid_flags):
+            x1, y1, x2, y2 = line[0]
+            if valid:
+                cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            else:
+                cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
+
+    # 拼接图像
+    zero_im = np.zeros_like(img)
+    out_im = np.concatenate([mask_all[:, :, np.newaxis] + zero_im,
+                             new_mask[:, :, np.newaxis] + zero_im,
+                             img],
+                            axis=1)
+
+    return out_im
+
+
+def deal_one_image_show(im_path):
+    """
+    展示
+    :param im_path:
+    :return:
+    """
     im = cv2.imdecode(np.fromfile(im_path, np.uint8), cv2.IMREAD_COLOR)
     img = im.copy()
     # 颜色区域提取
@@ -115,31 +192,45 @@ def deal_one_image(im_path):
     box = cv2.boxPoints(rect)
     box = np.int0(box)
     # print(box,im_path)
-    cv2.drawContours(img, [box], 0, (0, 255, 255), 2)
+    img_box = img.copy()
+    cv2.drawContours(img_box, [box], 0, (0, 255, 255), 2)
 
     # 画最终的角度
     angle, valid_flags = get_angle(box, lines)
-    dx = np.cos(angle * np.pi/180)
-    dy = np.sin(angle * np.pi/180)
+    dx = np.cos(angle * np.pi / 180)
+    dy = np.sin(angle * np.pi / 180)
     h, w = img.shape[:2]
-    cv2.line(img, (w // 2, h // 2), (int(w / 2 + dx * w / 6), int(h / 2 + dy * h / 6)), (255, 0, 0), 2)
+    img_angle = img.copy()
+    cv2.line(img_angle, (w // 2, h // 2), (int(w / 2 + dx * w / 6), int(h / 2 + dy * h / 6)), (255, 0, 0), 2)
 
     # 画直线
+    img_lines = img_box.copy()
+    for line, valid in zip(lines, valid_flags):
+        x1, y1, x2, y2 = line[0]
+        cv2.line(img_lines, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+    img_valid_lines = img_box.copy()
     for line, valid in zip(lines, valid_flags):
         x1, y1, x2, y2 = line[0]
         if valid:
-            cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        else:
-            cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            cv2.line(img_valid_lines, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
     # 拼接图像
-    zero_im = np.zeros_like(img)
-    out_im = np.concatenate([mask_all[:, :, np.newaxis] + zero_im,
-                             new_mask[:, :, np.newaxis] + zero_im,
-                             img],
-                            axis=1)
-
-    return out_im
+    # zero_im = np.zeros_like(img)
+    # out_im = np.concatenate([mask_all[:, :, np.newaxis] + zero_im,
+    #                          new_mask[:, :, np.newaxis] + zero_im,
+    #                          img],
+    #                         axis=1)
+    # cv2.imshow('img', img)
+    # cv2.imshow('mask_all', mask_all)
+    # cv2.imshow('new_mask', new_mask)
+    # cv2.imshow('img_box', img_box)
+    cv2.imshow('img_lines', img_lines)
+    # cv2.imshow('img_valid_lines', img_valid_lines)
+    # cv2.imshow('img_angle', img_angle)
+    # cv2.imshow('open', open)
+    cv2.waitKeyEx(0)
+    # return out_im
 
 
 def get_angle(rect_pts, lines):
@@ -236,5 +327,9 @@ if __name__ == '__main__':
     #                         axis=1)
     # cv2.imshow('', out_im)
     # cv2.waitKeyEx(0)
-    deal_dir('/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-crop/box',
-             '/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-crop/direct_out')
+    # deal_dir('/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-办公室-crop/box',
+    #          '/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-办公室-crop/direct_out')
+    deal_dir('/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-相机-crop/box',
+             '/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-相机-crop/direct_out')
+
+    # deal_one_image_show('/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-crop/box/IMG_20210506_104144_1_001.jpg')

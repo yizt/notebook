@@ -217,3 +217,10 @@ Transformer 是 Google 提出的一种先进的 NLP 模型，在很多任务上�
 第一、提出了 Segment-Level Recurrence，在 Transformer 中引入了循环机制，在训练当前 segment 的时候，会保存并**使用上一个 segment 每一层的输出向量**。这样就可以利用到之前 segment 的信息，提高 Transformer 长期依赖的能力，在训练时**前一个 segment 的输出只参与前向计算**，而**不用进行反向传播**。
 
 第二、提出 Relative Positional Encodings，Transformer 为了表示每一个单词的位置，会在单词的 Embedding 中加入位置 Embedding，位置 Embedding 可以用三角函数计算或者学习得到。但是在 Transformer-XL 中不能使用这种方法，因为每一个 segment 都会存在相同位置的 Embedding，这样两个 segment 中同样位置的 Embedding 是一样的。因此 Transformer-XL 提出了一种新的位置编码方式，**相对位置编码** (Relative Positional Encodings)。
+
+
+
+### UIE(Universal Information Extraction)
+
+[Unified Structure Generation for Universal Information Extraction](https://arxiv.org/pdf/2203.12277.pdf)
+

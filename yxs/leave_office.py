@@ -16,8 +16,8 @@ def train_one(X_train, X_test, y_train, y_test, cat_feature_indices):
                                   learning_rate=0.1,
                                   od_type='Iter',
                                   model_size_reg=3,
-                                  depth=10,
-                                  l2_leaf_reg=3)
+                                  depth=15,
+                                  l2_leaf_reg=4)
     model.fit(X_train, y_train, cat_features=cat_feature_indices, eval_set=(X_test, y_test))
     print('train acc:{} , test acc:{}'.format(model.score(X_train, y_train),
                                               model.score(X_test, y_test)))
@@ -120,6 +120,23 @@ def main():
     model mean acc:0.996
     model more acc:0.997
 
+    n_splits=6, n_repeats=5, random_state=100
+    model max acc:0.988
+    model mean acc:0.997
+    model more acc:0.997
+
+    n_splits=4, n_repeats=10, random_state=100
+    model max acc:0.984
+    model mean acc:0.995
+    model more acc:0.997
+
+    n_splits=4, n_repeats=20, random_state=100
+    model max acc:0.984
+    model mean acc:0.995
+    model more acc:0.997
+
+    n_splits=2, n_repeats=50, random_state=100
+
     :return:
     """
     train = pd.read_csv('LeaveOffice/train.csv')
@@ -132,7 +149,7 @@ def main():
 
     cat_feature_indices = [i for i, x in enumerate(X.columns) if x in ['sales', 'salary']]
 
-    rkf = RepeatedKFold(n_splits=6, n_repeats=3, random_state=100)
+    rkf = RepeatedKFold(n_splits=4, n_repeats=10, random_state=100)
     model_list = []
     for train_index, test_index in rkf.split(X):
         print("TRAIN:", train_index, "TEST:", test_index)

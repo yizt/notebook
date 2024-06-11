@@ -31,8 +31,8 @@ def random_colors(num, bright=True):
 def iou_np(boxes_a, boxes_b):
     """
     numpy 计算IoU
-    :param boxes_a: (N,4)
-    :param boxes_b: (M,4)
+    :param boxes_a: [N,(y1,x1,y2,x2)]
+    :param boxes_b: [M,(y1,x1,y2,x2)]
     :return:  IoU (N,M)
     """
     # 扩维
@@ -342,3 +342,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    np.random.permutation

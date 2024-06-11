@@ -64,17 +64,21 @@ def load_test(csv_file):
 if __name__ == '__main__':
     train_data, target = load_train('/Users/admin/Downloads/yanxishe_77/train.csv')
 
+    from sklearn.utils import Bunch
 
     from sklearn import svm,tree
+    from sklearn.datasets import load_breast_cancer
     from sklearn.model_selection import cross_val_score
     # from xgboost import XGBClassifier
     from sklearn.ensemble import GradientBoostingClassifier
     from sklearn.feature_selection import SelectFromModel
     from sklearn.preprocessing import StandardScaler, Normalizer,MinMaxScaler
+    from sklearn.preprocessing import LabelEncoder,OneHotEncoder
 
     clf = svm.SVC(kernel='rbf', C=1)
     # clf = svm.SVC(kernel='poly', class_weight='balanced')
-    # clf = tree.DecisionTreeClassifier(max_depth=3)
+    clf = tree.DecisionTreeClassifier(max_depth=3)
+    tree.export_graphviz
     # clf = GradientBoostingClassifier()
     model = SelectFromModel(estimator=tree.DecisionTreeClassifier())
     model.fit(train_data, target)

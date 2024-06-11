@@ -4,3 +4,21 @@
 cat /sys/block/sda/queue/rotational
 ```
 
+
+
+2、查看待挂载磁盘
+
+```shell
+lsblk -lp
+```
+
+
+
+
+
+3、磁盘挂载
+
+```shell
+sudo mount /dev/sda /mnt
+```
+

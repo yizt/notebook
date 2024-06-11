@@ -106,6 +106,85 @@ class ResNetModel(BaseModel):
         return nn.Sequential(*list(resnet.children())[:-2])
 
 
+class Normalization(nn.Module):
+    def __init__(self, mean, std):
+        super(Normalization, self).__init__()
+        self.mean = torch.tensor(mean).view(-1, 1, 1)
+        self.std = torch.tensor(std).view(-1, 1, 1)
+
+    def forward(self, img):
+        # normalize img
+        return (img - self.mean) / self.std
+
+
+def nst_model(vgg, style_img, device):
+    """
+
+    :param vgg:
+    :param style_img:
+    :param device:
+    :return:
+    """
+    normalization = Normalization(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
+
+    style_img = style_img.to(device).detach()
+    style_losses = []
+
+    model = nn.Sequential(normalization).to(device)
+
+    i = 0
+    for name, layer in vgg._modules.items():
+        if name in ['0', '2', '5', '7', '10']:
+            model.add_module('conv_{}'.format(i), layer)
+            style_target = model(style_img)
+            style_loss = SL(style_target).to(device)
+            style_losses.append(style_loss)
+            model.add_module('styleloss_{}'.format(i), style_loss)
+            i += 1
+
+        elif name in ['1', '3', '6', '8']:
+            layer = nn.ReLU(inplace=False)
+            model.add_module('relu_{}'.format(i), layer)
+            i += 1
+
+        elif name in ['4', '9']:
+            model.add_module('maxpool_{}'.format(i), layer)
+            i += 1
+
+        elif name == '11':
+            break
+
+    return model, style_losses
+
+
+def nst_predict(args):
+    vgg = models.vgg.make_layers(models.vgg.cfgs['E'])
+    print(vgg)
+    # vgg.load_state_dict(torch.load(args.weight_path))
+    # vgg.to(device).eval()
+
+    # nst_model(vgg, style_img, device)
+
+
+
+def gram_matrix(input):
+    b, c, h, w = input.size()
+    features = input.view(-1, h * w)
+    G = torch.mm(features, features.t())
+    return G.div(b * c * h * w)
+
+
+class SL(nn.Module):
+    def __init__(self, target):
+        super(SL, self).__init__()
+        self.target = gram_matrix(target).detach()
+
+    def forward(self, input):
+        G = gram_matrix(input)
+        self.loss = F.mse_loss(G, self.target)
+        return input
+
+
 def train(args):
     torch.backends.cudnn.benchmark = True
 
@@ -113,7 +192,7 @@ def train(args):
                           img_transforms=transforms.Compose([
                               transforms.RandomResizedCrop(224),
                               transforms.RandomHorizontalFlip(),
-                              transforms.ColorJitter(brightness=0.4, saturation=0.4, hue=0.4),
+                              # transforms.ColorJitter(brightness=0.4, saturation=0.4, hue=0.4),
                               transforms.ToTensor(),
                               transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                                    std=[0.229, 0.224, 0.225])
@@ -146,6 +225,7 @@ def train(args):
 
     # 训练
     for epoch in range(args.init_epoch, args.epochs):
+        net.train()
         epoch_loss = 0
         accuracy_num = 0
         for sample in tqdm(data_loader):
@@ -182,7 +262,8 @@ def train(args):
                 'args': args}
             torch.save(checkpoint,
                        os.path.join(args.output_dir, 'art.{:03d}.pth'.format(epoch + 1)))
-
+        if epoch % 3 == 0:
+            inference(args, net)
     return net
 
 
@@ -218,7 +299,7 @@ if __name__ == '__main__':
     parser.add_argument("--device", type=str, default='cpu', help="cpu or cuda")
     parser.add_argument("--batch-size", type=int, default=64, help="batch size")
     parser.add_argument("--epochs", type=int, default=50, help="epochs")
-    parser.add_argument("--init-epoch", type=int, default=0, help="init epoch")
+    parser.add_argument("--init-epoch", type=int, default=3, help="init epoch")
     parser.add_argument('--weight-decay', default=1e-5, type=float, help='weight decay (default: 0)')
     parser.add_argument("--workers", type=int, default=4, help="number of workers")
     parser.add_argument('--output-dir', default='./output', help='path where to save')
@@ -226,6 +307,6 @@ if __name__ == '__main__':
     arguments = parser.parse_args(sys.argv[1:])
     device = torch.device(
         'cuda' if arguments.device == 'cuda' and torch.cuda.is_available() else 'cpu')
-    net = train(arguments)
+    # train(arguments)
 
-    inference(arguments, net)
+    nst_predict(arguments)

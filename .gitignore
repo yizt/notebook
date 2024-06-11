@@ -1,6 +1,15 @@
 .idea
+*/*/.ipynb_checkpoints
 */.ipynb_checkpoints
+.ipynb_checkpoints
 *.hdf5
 */.pytest_cache
 */__pycache__
+*/*/__pycache__
+*/*/*/__pycache__
 .DS_Store
+work/
+examples/
+python/opencv/output*
+python/opencv/*/*.jpg
+yxs/

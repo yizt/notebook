@@ -8,6 +8,7 @@
 import numpy as np
 import pandas as pd
 import torch
+from torch.optim import AdamW
 from transformers import AdamW
 from transformers import BertForSequenceClassification
 from transformers import BertTokenizer

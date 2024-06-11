@@ -9,7 +9,17 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 
 
 
+
 例子
+
+```shell
+pip install opencv-python==3.4.2.17 -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install opencv-contrib-python==3.4.2.17 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+pip install opencv-contrib-python==3.4.2.16 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+```
+
 
 ```shell
 wget https://pypi.doubanio.com/packages/fc/49/82d64d705ced344ba458197dadab30cfa745f9650ee22260ac2b275d288c/SQLAlchemy-1.3.8.tar.gz#md5=2eb0a5a3da5054a9f8be4efacc4ffd95

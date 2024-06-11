@@ -49,7 +49,7 @@ docker search centos
 
 结果
 
-```
+```shell
 [root@chinese ~]# docker search centos
 INDEX       NAME                                         DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
 docker.io   docker.io/centos                             The official build of CentOS.                   4419      [OK]       

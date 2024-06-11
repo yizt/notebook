@@ -6,7 +6,8 @@
 wget https://get.enterprisedb.com/postgresql/postgresql-9.5.19-1-linux-x64.run
 ```
 
-配置文件/opt/PostgreSQL/9.5/data/postgresql.conf
+配置文件/opt/PostgreSQL/9.5/data/pg_hba.conf
+
 ```shell
 # IPv4 local connections:
 host    all             all             127.0.0.1/32            md5
@@ -38,6 +39,7 @@ wget https://get.enterprisedb.com/postgresql/postgresql-9.5.19-1-osx.dmg
 
 ```
 export PATH=/Library/PostgreSQL/9.5/bin:$PATH
+psql
 pip install psycopg2
 ```
 

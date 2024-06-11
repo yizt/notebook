@@ -239,3 +239,89 @@ wget -c -t 0 https://www.crcv.ucf.edu/data/UCF101/UCF101.rar
 - paper：[Scene Text Recognition using Higher Order Language Priors](http://www.di.ens.fr/willow/pdfscurrent/mishra12a.pdf)
 - [数据库下载](http://cvit.iiit.ac.in/research/projects/cvit-projects/the-iiit-5k-word-dataset)
 - 地址：http://cvit.iiit.ac.in/images/Projects/SceneTextUnderstanding/IIIT5K-Word_V3.0.tar.gz
+
+
+
+
+
+## 服装款式
+
+### DeepFashion
+
+Large-scale Fashion (DeepFashion) Database
+
+下载地址: https://pan.baidu.com/s/1PwJq0U2UPBWKkZvOR2lefQ
+
+
+
+### 行人属性识别
+
+### PK-100
+
+https://www.v7labs.com/open-datasets/pa-100k
+
+
+
+### PETA数据集
+
+[数据集](https://so.csdn.net/so/search?q=%E6%95%B0%E6%8D%AE%E9%9B%86&spm=1001.2101.3001.7020)主页（内含数据集下载地址）：
+
+<http://mmlab.ie.cuhk.edu.hk/projects/PETA.html>
+
+百度网盘连接：
+
+链接: <https://pan.baidu.com/s/1Yt47VmpozNSYI3DDxzZtVA> 密码: qkbj
+
+
+
+
+
+### 百度人体属性识别17中属性
+
+| 序号 | 属性           | 接口字段    | 输出项说明                                                   |
+| ---- | -------------- | ----------- | ------------------------------------------------------------ |
+| 1    | 性别           | gender      | 男性、女性                                                   |
+| 2    | 年龄阶段       | age         | 幼儿、青少年、青年、中年、老年                               |
+| 3    | 上身服饰       | upper_wear  | 长袖、短袖                                                   |
+| 4    | 下身服饰       | lower_wear  | 长裤、短裤、长裙、短裙、不确定                               |
+| 5    | 上身服饰颜色   | upper_color | 红、橙、黄、绿、蓝、紫、粉、黑、白、灰、棕                   |
+| 6    | 下身服饰颜色   | lower_color | 红、橙、黄、绿、蓝、紫、粉、黑、白、灰、棕、不确定           |
+| 7    | 背包           | bag         | 无背包、单肩包、双肩包                                       |
+| 8    | 是否戴帽子     | headwear    | 无帽、普通帽、安全帽                                         |
+| 9    | 是否戴口罩     | face_mask   | 无口罩、戴口罩、不确定                                       |
+| 10   | 是否使用手机   | cellphone   | 未使用手机、看手机、打电话、不确定                           |
+| 11   | 人体朝向       | orientation | 正面、背面、左侧面、右侧面                                   |
+| 12   | 是否吸烟       | smoke       | 吸烟、未吸烟、不确定                                         |
+| 13   | 上方截断       | upper_cut   | 无上方截断、有上方截断                                       |
+| 14   | 下方截断       | lower_cut   | 无下方截断、有下方截断                                       |
+| 15   | 侧方截断       | side_cut    | 无侧方截断、有侧方截断                                       |
+| 16   | 遮挡情况       | occlusion   | 无遮挡、轻度遮挡、重度遮挡                                   |
+| 17   | 是否是正常人体 | is_human    | 非正常人体、正常人体；**用于判断说明人体的截断/遮挡情况，并非判断动物等非人类生物**。 正常人体：身体露出大于二分之一的人体，一般以能看到腰部肚挤眼为标准； 非正常人体：严重截断、或严重遮挡的人体，一般看不到肚挤眼，比如只有个脑袋、一条腿 |
+
+
+
+### 腾讯人体检测与属性分析
+
+下装：
+
+a) 颜色：{ 黑色系, 灰白色系, 彩色}
+
+b) 类型：{裤子,裙子}
+
+c) 长度：{长, 短}
+
+上装：
+
+a) 颜色： {红色系, 黄色系, 绿色系, 蓝色系, 黑色系, 灰白色系}
+
+b) 纹理：{纯色, 格子, 大色块}
+
+c) 袖长：{长袖, 短袖}
+
+
+
+### 参考
+
+Pedestrian Attribute Recognition：https://paperswithcode.com/task/pedestrian-attribute-recognition/
+
+工程：https://github.com/valencebond/Rethinking_of_PAR
