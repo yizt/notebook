@@ -118,8 +118,6 @@ def test_camera_show():
 if __name__ == '__main__':
     # cv_show('./data/Abuse011_x264.mp4')
     # cv_show(r'D:\pyspace\py_data_mining\anomaly-detection\tmp\predict-Abuse005_x264.mp4')
-    # video2images('/Users/yizuotian/zoomlion/demo_material/video_20200318_102620.mp4',
-    #              '/Users/yizuotian/zoomlion/demo_material/video_20200318_102620_pic')
     video_concat(['/Users/yizuotian/cspace/mix_station_embeded/output.mp4',
                   '/Users/yizuotian/cspace/mix_station_embeded/output-2.mp4'],
                  '/Users/yizuotian/cspace/mix_station_embeded/output-compare.mp4')

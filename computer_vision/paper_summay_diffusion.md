@@ -524,9 +524,6 @@ H=-\sum_{i=1}^Np(x_i)*logp(x_i)
 $$
 
 
-![技术中http://confluence.zvos.zoomlion.com/download/attachments/41675025/image2023-2-19_16-10-18.png?version=1&modificationDate=1676794218000&api=v2)
-
-
 
 
 

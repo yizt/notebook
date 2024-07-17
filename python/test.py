@@ -36,8 +36,7 @@ def format_np(np_2d):
 
 
 if __name__ == '__main__':
-    # video2images('/Users/yizuotian/zoomlion/demo_material/media2.mp4',
-    #              '/Users/yizuotian/zoomlion/demo_material/pics/')
+
     # im = cv2.imread('√.png')
     # print(im.shape)
     # im = cv2.resize(im, dsize=(100, 100))

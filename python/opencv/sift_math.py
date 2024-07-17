@@ -133,7 +133,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input-video', type=str,
-                        default='/Users/yizuotian/zoomlion/demo_material/video_20200318_102620.mp4')
+                        default='/Users/yizuotian/demo_material/video_20200318_102620.mp4')
     parser.add_argument('-o', '--output-video', type=str, default='output.mp4')
     arguments = parser.parse_args()
     import time

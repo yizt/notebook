@@ -165,6 +165,3 @@ if __name__ == '__main__':
     im_path = '../../data/text/2.jpg'
     weight_path = '/Users/yizuotian/pretrained_model/frozen_east_text_detection.pb'
     main(weight_path, im_path)
-    # video_detect('/Users/yizuotian/zoomlion/zhongchuang/video.mp4',
-    #              weight_path,
-    #              '/Users/yizuotian/zoomlion/zhongchuang/detect_video.avi')
