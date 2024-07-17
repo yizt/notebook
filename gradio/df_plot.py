@@ -71,6 +71,15 @@ def plot_data(num):
     return fig2im(fig)
 
 
+import gradio as gr
+
+with gr.Blocks() as dashboard:
+    with gr.Row():
+        gr.BarPlot(read_data, x="product_id", y="price", title="Prices", every=60)
+        gr.BarPlot(read_data, x="product_id", y="inventory_count", title="Inventory", every=60)
+
+dashboard.queue().launch()
+
 
 def test():
     """
