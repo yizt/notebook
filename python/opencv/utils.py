@@ -64,7 +64,7 @@ def rename_file(dir_path, length=3):
 
 
 def main():
-    dir_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/ggg/1200_20-60'
+    dir_path = '/Volumes/Elements/xx/ggg/1200_20-60'
     # bmp_to_jpg(dir_path)
     # down_scale_image_dir(dir_path, 800)
     rename_file(dir_path)

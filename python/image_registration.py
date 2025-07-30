@@ -187,13 +187,13 @@ def deal_im_valve(src_pts, im_template, im, colors):
 
 
 def valve_main():
-    template_im_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/template/02.jpg'
-    # src_im_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准'
-    # out_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准_output_orb'
+    template_im_path = '/Volumes/Elements/x x/template/02.jpg'
+    # src_im_dir = '/Volumes/Elements/xx/位置校准'
+    # out_dir = '/Volumes/Elements/xx/位置校准_output_orb'
 
-    src_im_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/ggg/1200_20-60'
-    out_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/rgt_out/1200_20-60'
-    json_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/template/main_valve2.json'
+    src_im_dir = '/Volumes/Elements/xx/ggg/1200_20-60'
+    out_dir = '/Volumes/Elements/xx/rgt_out/1200_20-60'
+    json_path = '/Volumes/Elements/xx/template/main_valve2.json'
 
     pts = parse_file(json_path)
     colors = random_colors(len(pts))
@@ -217,10 +217,10 @@ def valve_main():
 
 
 def valve_main_2():
-    template_im_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/template.jpg'
-    src_im_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准'
-    out_dir = '/Volumes/Elements/土方智能工厂/工步防错-主阀/位置校准_output_2'
-    json_path = '/Volumes/Elements/土方智能工厂/工步防错-主阀/main_valve.json'
+    template_im_path = '/Volumes/Elements/xx/template.jpg'
+    src_im_dir = '/Volumes/Elements/xx/位置校准'
+    out_dir = '/Volumes/Elements/xx/位置校准_output_2'
+    json_path = '/Volumes/Elements/xx/main_valve.json'
 
     pts = parse_file(json_path).reshape(-1, 2)
 
@@ -254,9 +254,9 @@ def chess_main():
            [664, 636],
            [762, 732]]
     pts = np.array(pts)
-    template_im_path = '/Volumes/Elements/土方智能工厂/template.jpg'
-    src_im_dir = '/Volumes/Elements/土方智能工厂/棋盘格'
-    out_dir = '/Volumes/Elements/土方智能工厂/match_output'
+    template_im_path = '/Volumes/Elements/xx/template.jpg'
+    src_im_dir = '/Volumes/Elements/xx/棋盘格'
+    out_dir = '/Volumes/Elements/xx/match_output'
 
     im_template = cv2.imread(template_im_path)
     for im_name in os.listdir(src_im_dir):
@@ -270,7 +270,7 @@ def chess_main():
         cv2.imwrite(out_path, im_out)
 
     # draw_points(im_template, pts)
-    # cv2.imwrite('/Volumes/Elements/土方智能工厂/template_draw.jpg', im_template)
+    # cv2.imwrite('/Volumes/Elements/xx/template_draw.jpg', im_template)
 
 
 if __name__ == '__main__':
