@@ -1,0 +1,2 @@
+robot_name: a
+<<: !include robot_attr.yaml

@@ -1,0 +1,3 @@
+robot_name: b
+<<: !include robot_attr.yaml
+ip: 1.1.1.1
