@@ -327,9 +327,5 @@ if __name__ == '__main__':
     #                         axis=1)
     # cv2.imshow('', out_im)
     # cv2.waitKeyEx(0)
-    # deal_dir('/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-办公室-crop/box',
-    #          '/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-办公室-crop/direct_out')
-    deal_dir('/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-相机-crop/box',
-             '/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-相机-crop/direct_out')
 
-    # deal_one_image_show('/Volumes/Elements/土方智能工厂/工步防错-主阀/接头朝向-crop/box/IMG_20210506_104144_1_001.jpg')
+    deal_one_image_show('/box/IMG_20210506_104144_1_001.jpg')
